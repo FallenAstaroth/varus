@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/room.css') }}" />
+    <script src="{{ url_for('static', filename='js/lib/socket.io.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/playerjs.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/room.js') }}"></script>
+</head>
+<body class="room-page">
+    <div class="wrapper">
+        <div class="player-chat">
+            <div class="player block">
+                <div class="player-frame">
+                    <div class="video" id="player" data-links="{{ links }}"></div>
+                </div>
+                <h2 class="block-title">Код комнаты: <span class="block-code">{{ code }}</span></h2>
+            </div>
+            <div class="chat block">
+                <h2 class="block-title">Чат комнаты</h2>
+                <div class="chat-box">
+                    <div class="messages">
+                        {% for message in messages %}
+                        <script type="text/javascript">
+                            createMessage("{{ message.name }}", "{{ message.message }}");
+                        </script>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="chat-inputs">
+                    <input type="text" class="form-control message-input"  placeholder="Сообщение" name="message" autocomplete="off"/>
+                    <button type="button" class="btn btn-primary message-send" name="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+</head>
+<body class="index-page">
+    <div class="wrapper">
+        <form method="post" class="rooms block">
+            <h3 class="form-title">Varus TV</h3>
+            <div class="label-input">
+                <label class="form-label" for="name">Имя</label>
+                <div class="name-inputs">
+                    <input type="text" class="form-control" placeholder="Джонни Депп" name="name" id="name" value="{{ data['name'] }}" autofocus autocomplete="off"/>
+                    <input type="color" class="form-color-input" name="nick_color" id="nick_color" value="{% if data['color'] %}{{ data['color'] }}{% else %}#c76ad9{% endif %}">
+                </div>
+                {% if data["error"] and data["error"]["type"] == "name" %}
+                    <span class="form-error">{{ data["error"]["text"] }}</span>
+                {% endif %}
+            </div>
+            <div class="label-input">
+                <label class="form-label">Пол</label>
+                <div class="sexs">
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="sex" id="male" value="male" checked>
+                        <label class="form-check-label" for="male">Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="sex" id="female" value="female">
+                        <label class="form-check-label" for="female">Женский</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="sex" id="undefined" value="undefined">
+                        <label class="form-check-label" for="undefined">Хто я?</label>
+                    </div>
+                </div>
+            </div>
+            <div class="divider">
+                <div class="divider-text">осталось только</div>
+            </div>
+            <div class="label-input">
+                <label class="form-label" for="links">Ссылка</label>
+                <input type="text" class="form-control" placeholder="https://youtube.com/watch?v=qwerty" name="links" id="links" autocomplete="off"/>
+                {% if data["error"] and data["error"]["type"] == "links" %}
+                    <span class="form-error">{{ data["error"]["text"] }}</span>
+                {% endif %}
+            </div>
+            <button type="submit" name="create" class="btn btn-primary btn-create">Создать комнату</button>
+            <div class="divider">
+                <div class="divider-text">или</div>
+            </div>
+            <div class="label-input join">
+                <label for="code" class="form-label">Код комнаты</label>
+                <input type="text" class="form-control" placeholder="BONK" name="code" id="code" value="{{ data['code'] }}" autocomplete="off"/>
+                {% if data["error"] and data["error"]["type"] == "code" %}
+                    <span class="form-error">{{ data["error"]["text"] }}</span>
+                {% endif %}
+            </div>
+            <button type="submit" name="join" class="btn btn-primary btn-join">Присоединиться</button>
+        </form>
+    </div>
+</body>
+</html>
