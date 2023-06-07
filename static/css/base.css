@@ -11,6 +11,10 @@
   --btn-padding-y: .4375rem;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   background-color: var(--color-body-background);
@@ -19,6 +23,10 @@ body {
 
 h1, h2, h3, h4, h5, h6, h7, p, span {
   margin: 0;
+}
+
+.wrapper {
+  height: 100%;
 }
 
 .form-control {
