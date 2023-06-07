@@ -61,6 +61,11 @@
   font-size: .9rem;
 }
 
+.room-page .chat.block .chat-box .messages .text:last-child {
+  margin-bottom: 10px;
+}
+
+
 .room-page .chat.block .chat-box .messages .text.additional {
   margin-top: 0;
 }

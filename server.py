@@ -114,11 +114,12 @@ def message(data):
             color=session.get("color"),
             time=data["time"],
             message=data["message"],
-            additional=True if rooms[room].get("last_message") == name else False
+            additional=True if rooms[room].get("last_message") == name and rooms[room]["last_event"] == "message" else False
         )
     }
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_event"] = "message"
     emit("message", content, to=room)
 
 
@@ -142,6 +143,7 @@ def play(data):
     }
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_event"] = "play"
     emit("play", content, to=room)
 
 
@@ -164,6 +166,7 @@ def pause():
     }
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_event"] = "pause"
     emit("pause", content, to=room)
 
 
@@ -198,13 +201,15 @@ def connect():
             name=name,
             color=session.get("color"),
             message=get_label_by_sex("join", session.get("sex")),
-            icon="bell"
+            icon="bell",
+            event="connect"
         )
     }
 
     join_room(room)
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_event"] = "connect"
     rooms[room]["members"] += 1
     emit("message", content, to=room)
 
@@ -231,6 +236,7 @@ def disconnect():
     }
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_event"] = "disconnect"
     emit("message", content, to=room)
 
 
