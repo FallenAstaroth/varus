@@ -188,6 +188,11 @@
   .room-page .chat.block .chat-box .messages .text {
     line-height: 1.2;
     font-size: .7rem;
+    margin-top: 8px;
+  }
+
+  .room-page .chat.block .chat-box .messages .text:last-child {
+    margin-bottom: 8px;
   }
 
   .room-page .chat.block .chat-box .messages .text .header .time {
