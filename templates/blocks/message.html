@@ -1,0 +1,7 @@
+<div class="text {% if additional %}additional{% endif %} {% if event %}event{% endif %}">
+    <div class="header">
+        <p class="name" style="color: {{ color }}">{{ name }}</p>
+        <p class="time">{% if time %}{{ time }}{% endif %}</p>
+    </div>
+    <p class="message">{% if icon %}<img class="icon" src="../../static/img/svg/{{ icon }}.svg">{% endif %}{{ message }}</p>
+</div>
