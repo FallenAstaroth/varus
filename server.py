@@ -5,11 +5,11 @@ from json import dumps
 from random import choice
 from string import ascii_uppercase
 
-from config import HOST, PORT
 from utils import get_label_by_sex
+from config import HOST, PORT, SECRET_KEY, UNSAFE_WERKZEUG, DEBUG
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "varus"
+app.config["SECRET_KEY"] = SECRET_KEY
 socketio = SocketIO(app)
 
 rooms = {}
@@ -241,4 +241,4 @@ def disconnect():
 
 
 if __name__ == "__main__":
-    socketio.run(app, host=HOST, port=PORT, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app, host=HOST, port=PORT, debug=DEBUG, allow_unsafe_werkzeug=UNSAFE_WERKZEUG)
