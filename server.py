@@ -2,7 +2,7 @@ from flask_socketio import join_room, leave_room, emit, SocketIO
 from flask import Flask, render_template, request, session, redirect, url_for
 
 from json import dumps
-from random import choice
+from random import choice, randint
 from string import ascii_uppercase
 
 from utils import get_label_by_sex
@@ -13,6 +13,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 socketio = SocketIO(app)
 
 rooms = {}
+ids = []
 
 
 def generate_unique_code(length):
@@ -139,7 +140,8 @@ def play(data):
             message=get_label_by_sex("play", session.get("sex")),
             icon="play"
         ),
-        "time": data["time"]
+        "time": data["time"],
+        "user": data["user"]
     }
 
     rooms[room]["last_message"] = name
@@ -148,7 +150,7 @@ def play(data):
 
 
 @socketio.on("pause")
-def pause():
+def pause(data):
     room = session.get("room")
     name = session.get("name")
 
@@ -162,7 +164,8 @@ def pause():
             color=session.get("color"),
             message=get_label_by_sex("stop", session.get("sex")),
             icon="stop"
-        )
+        ),
+        "user": data["user"]
     }
 
     rooms[room]["last_message"] = name
