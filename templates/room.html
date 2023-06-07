@@ -23,13 +23,7 @@
             <div class="chat block">
                 <h2 class="block-title">Чат комнаты</h2>
                 <div class="chat-box">
-                    <div class="messages">
-                        {% for message in messages %}
-                        <script type="text/javascript">
-                            createMessage("{{ message.name }}", "{{ message.message }}");
-                        </script>
-                        {% endfor %}
-                    </div>
+                    <div class="messages"></div>
                 </div>
                 <div class="chat-inputs">
                     <input type="text" class="form-control message-input"  placeholder="Сообщение" name="message" autocomplete="off"/>

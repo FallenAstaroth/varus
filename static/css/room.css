@@ -53,16 +53,16 @@
   background: #1e1f2e;
 }
 
-.room-page .chat.block .chat-box .messages {
-  padding-top: 10px;
-}
-
 .room-page .chat.block .chat-box .messages .text {
   color: #a5a5b7;
   line-height: 1.4;
   word-wrap: break-word;
-  margin-bottom: 10px;
+  margin-top: 10px;
   font-size: .9rem;
+}
+
+.room-page .chat.block .chat-box .messages .text.additional {
+  margin-top: 0;
 }
 
 .room-page .chat.block .chat-box .messages .text .header {
@@ -71,12 +71,28 @@
   justify-content: space-between;
 }
 
+.room-page .chat.block .chat-box .messages .text.additional .header {
+  display: none;
+}
+
 .room-page .chat.block .chat-box .messages .text .header .name {
   font-weight: 700;
 }
 
 .room-page .chat.block .chat-box .messages .text .header .time {
   font-size: .75rem;
+}
+
+.room-page .chat.block .chat-box .messages .text .message {
+  display: flex;
+  align-items: center;
+}
+
+.room-page .chat.block .chat-box .messages .text .message .icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 3px;
+  object-fit: contain;
 }
 
 .room-page .chat.block .chat-inputs {
@@ -171,5 +187,11 @@
 
   .room-page .chat.block .chat-box .messages .text .header .time {
     font-size: .65rem;
+  }
+
+  .room-page .chat.block .chat-box .messages .text .message .icon {
+    width: 11px;
+    height: 11px;
+    margin-right: 3px;
   }
 }
