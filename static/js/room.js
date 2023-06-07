@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var socketio = io();
+    var date = new Date();
 
     function addZero(num) {
         return String(num).padStart(2, '0');
@@ -19,24 +20,13 @@ $(document).ready(function() {
 
     cloneChatToOverlay();
 
-    let isInitialPlay = true;
-
     const playerFrame = $("#player"),
-          messagesBox = $(".chat-box .messages");
-          messagesScroll = $(".chat-box");
+          messagesBox = $(".chat-box .messages"),
+          messagesScroll = $(".chat-box"),
+          chatInputs = $(".chat-inputs");
 
-    const createMessage = (name, color, msg) => {
-        var date = new Date();
-        const content = `
-        <div class="text">
-            <div class="header">
-                <p class="name" style="color: ${color}">${name}</p>
-                <p class="time">${addZero(date.getHours())}:${addZero(date.getMinutes())}</p>
-            </div>
-            <p class="message">${msg}</p>
-        </div>
-        `;
-        messagesBox.append(content);
+    const createMessage = (name, color, message) => {
+        messagesBox.append(message);
         messagesScroll.stop().animate({
             scrollTop: messagesBox.last().prop("scrollHeight")
         }, 500);
@@ -52,32 +42,12 @@ $(document).ready(function() {
         }
 
         socketio.emit("message", {
-            data: messageText
+            message: messageText,
+            time: `${addZero(date.getHours())}:${addZero(date.getMinutes())}`
         });
 
         messageInput.val("");
         messageInput.focus();
-    };
-
-    const syncPlayers = (time) => {
-        isInitialPlay = false;
-        player.api("seek", time);
-        player.api("play");
-    };
-
-    const sendPlay = () => {
-        const time = player.api("time");
-        socketio.emit("play", {
-            time: time
-        });
-    };
-
-    const pausePlayers = () => {
-        player.api("pause");
-    };
-
-    const sendPause = () => {
-        socketio.emit("pause", {});
     };
 
     socketio.on("message", (data) => {
@@ -85,33 +55,46 @@ $(document).ready(function() {
     });
 
     socketio.on("play", (data) => {
-        syncPlayers(data.time);
+        if (Math.abs(data.time - player.api("time")) > 1) {
+            player.api("seek", data.time);
+        }
+        if (!player.api("playing")) {
+            player.api("play");
+        }
+        createMessage(data.name, data.color, data.message);
     });
 
     socketio.on("pause", (data) => {
-        pausePlayers();
+        if (player.api("playing")) {
+            player.api("pause");
+        }
+        createMessage(data.name, data.color, data.message);
     });
 
-    $(".chat-inputs").on("click", ".message-send", function() {
+    socketio.on("seek", (data) => {
+        player.api("seek", data.time);
+    });
+
+    chatInputs.on("click", ".message-send", function() {
         sendMessage($(this));
     });
 
-    playerFrame.on("play", (event) => {
-        if (isInitialPlay) {
-            sendPlay();
-        } else {
-            isInitialPlay = true;
-        }
-    });
-
-    $(".chat-inputs").on("keypress", ".message-input", function(event) {
+    chatInputs.on("keypress", ".message-input", function(event) {
         if (event.which == 13) {
             sendMessage($(this));
         }
     });
 
-    playerFrame.on("pause", () => {
-        sendPause();
+    playerFrame.on("play", (event) => {
+        socketio.emit("play", { time: player.api("time") });
+    });
+
+    playerFrame.on("pause", (event) => {
+        socketio.emit("pause");
+    });
+
+    playerFrame.on("seek", (event) => {
+        socketio.emit("seek", { time: player.api("time") });
     });
 
     playerFrame.on("fullscreen", () => {

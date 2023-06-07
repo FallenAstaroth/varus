@@ -1,7 +1,8 @@
+from flask_socketio import join_room, leave_room, emit, SocketIO
 from flask import Flask, render_template, request, session, redirect, url_for
-from flask_socketio import join_room, leave_room, send, emit, SocketIO
-import random
+
 from json import dumps
+from random import choice
 from string import ascii_uppercase
 
 from config import HOST, PORT
@@ -16,7 +17,7 @@ rooms = {}
 
 def generate_unique_code(length):
     while True:
-        code = ''.join(random.choice(ascii_uppercase) for _ in range(length))
+        code = ''.join(choice(ascii_uppercase) for _ in range(length))
         if code in rooms:
             continue
         return code
@@ -68,7 +69,6 @@ def home():
             room = generate_unique_code(4)
             rooms[room] = {
                 "members": 0,
-                "messages": [],
                 "links": dumps([{"title": "123", "file": link} for link in links])
             }
 
@@ -96,84 +96,123 @@ def room():
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for("home"))
 
-    return render_template("room.html", code=room, messages=rooms[room]["messages"], links=rooms[room]["links"])
+    return render_template("room.html", code=room, links=rooms[room]["links"])
 
 
 @socketio.on("message")
 def message(data):
     room = session.get("room")
+    name = session.get("name")
 
     if room not in rooms:
         return
 
     content = {
-        "name": session.get("name"),
-        "color":  session.get("color"),
-        "message": data["data"]
+        "message": render_template(
+            "blocks/message.html",
+            name=name,
+            color=session.get("color"),
+            time=data["time"],
+            message=data["message"],
+            additional=True if rooms[room].get("last_message") == name else False
+        )
     }
 
-    send(content, to=room)
-    rooms[room]["messages"].append(content)
+    rooms[room]["last_message"] = name
+    emit("message", content, to=room)
 
 
 @socketio.on("play")
 def play(data):
     room = session.get("room")
+    name = session.get("name")
+
+    if room not in rooms:
+        return
+
+    content = {
+        "message": render_template(
+            "blocks/message.html",
+            name=name,
+            color=session.get("color"),
+            message=get_label_by_sex("play", session.get("sex")),
+            icon="play"
+        ),
+        "time": data["time"]
+    }
+
+    rooms[room]["last_message"] = name
+    emit("play", content, to=room)
+
+
+@socketio.on("pause")
+def pause():
+    room = session.get("room")
+    name = session.get("name")
+
+    if room not in rooms:
+        return
+
+    content = {
+        "message": render_template(
+            "blocks/message.html",
+            name=name,
+            color=session.get("color"),
+            message=get_label_by_sex("stop", session.get("sex")),
+            icon="stop"
+        )
+    }
+
+    rooms[room]["last_message"] = name
+    emit("pause", content, to=room)
+
+
+@socketio.on("seek")
+def seek(data):
+    room = session.get("room")
 
     if room not in rooms:
         return
 
     content = {
         "name": session.get("name"),
+        "color": session.get("color"),
         "time": data["time"]
     }
 
-    emit("play", content, to=room)
-
-
-@socketio.on("pause")
-def pause(data):
-    room = session.get("room")
-
-    if room not in rooms:
-        return
-
-    content = {}
-
-    emit("pause", content, to=room)
+    emit("seek", content, to=room)
 
 
 @socketio.on("connect")
-def connect(auth):
+def connect():
     room = session.get("room")
     name = session.get("name")
-    sex = session.get("sex")
-    color = session.get("color")
-
-    if not all([room, name, sex]):
-        return
 
     if room not in rooms:
         leave_room(room)
         return
 
     content = {
-        "name": name,
-        "color": color,
-        "message": f'{get_label_by_sex("join", sex)} к комнате'
+        "message": render_template(
+            "blocks/message.html",
+            name=name,
+            color=session.get("color"),
+            message=get_label_by_sex("join", session.get("sex")),
+            icon="bell"
+        )
     }
 
     join_room(room)
-    send(content, to=room)
+
+    rooms[room]["last_message"] = name
     rooms[room]["members"] += 1
+    emit("message", content, to=room)
 
 
 @socketio.on("disconnect")
 def disconnect():
     room = session.get("room")
     name = session.get("name")
-    color = session.get("color")
-    sex = session.get("sex")
     leave_room(room)
 
     if room in rooms:
@@ -182,12 +221,17 @@ def disconnect():
             del rooms[room]
 
     content = {
-        "name": name,
-        "color": color,
-        "message": f'{get_label_by_sex("left", sex)} комнату'
+        "message": render_template(
+            "blocks/message.html",
+            name=name,
+            color=session.get("color"),
+            message=get_label_by_sex("left", session.get("sex")),
+            icon="bell"
+        )
     }
 
-    send(content, to=room)
+    rooms[room]["last_message"] = name
+    emit("message", content, to=room)
 
 
 if __name__ == "__main__":
