@@ -100,7 +100,7 @@ def room():
     return render_template("room.html", code=room, links=rooms[room]["links"])
 
 
-@socketio.on("message")
+@socketio.on("server_message")
 def message(data):
     room = session.get("room")
     name = session.get("name")
@@ -121,10 +121,10 @@ def message(data):
 
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "message"
-    emit("message", content, to=room)
+    emit("client_message", content, to=room)
 
 
-@socketio.on("play")
+@socketio.on("server_play")
 def play(data):
     room = session.get("room")
     name = session.get("name")
@@ -146,10 +146,10 @@ def play(data):
 
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "play"
-    emit("play", content, to=room)
+    emit("client_play", content, to=room)
 
 
-@socketio.on("pause")
+@socketio.on("server_pause")
 def pause(data):
     room = session.get("room")
     name = session.get("name")
@@ -170,10 +170,10 @@ def pause(data):
 
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "pause"
-    emit("pause", content, to=room)
+    emit("client_pause", content, to=room)
 
 
-@socketio.on("seek")
+@socketio.on("server_seek")
 def seek(data):
     room = session.get("room")
 
@@ -186,7 +186,7 @@ def seek(data):
         "time": data["time"]
     }
 
-    emit("seek", content, to=room)
+    emit("client_seek", content, to=room)
 
 
 @socketio.on("connect")
@@ -214,7 +214,7 @@ def connect():
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "connect"
     rooms[room]["members"] += 1
-    emit("message", content, to=room)
+    emit("client_message", content, to=room)
 
 
 @socketio.on("disconnect")
@@ -240,7 +240,7 @@ def disconnect():
 
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "disconnect"
-    emit("message", content, to=room)
+    emit("client_message", content, to=room)
 
 
 if __name__ == "__main__":

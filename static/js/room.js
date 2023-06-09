@@ -2,6 +2,7 @@ $(document).ready(function() {
     let socketio = io();
     let date = new Date();
     let userId = Math.random().toString(36).substring(2, 15);
+    console.log(userId)
 
     function addZero(num) {
         return String(num).padStart(2, '0');
@@ -22,18 +23,23 @@ $(document).ready(function() {
     cloneChatToOverlay();
 
     let isInitialPlay = true,
-        isInitialPause = true;
+        isInitialPause = true,
+        isInitialSeek = true;
 
     const playerFrame = $("#player"),
           messagesBox = $(".chat-box .messages"),
           messagesScroll = $(".chat-box"),
           chatInputs = $(".chat-inputs");
 
-    const createMessage = (name, color, message) => {
-        messagesBox.append(message);
+    const chatScrollToBottom = () => {
         messagesScroll.stop().animate({
             scrollTop: messagesBox.last().prop("scrollHeight")
-        }, 500);
+        }, 300);
+    }
+
+    const createMessage = (name, color, message) => {
+        messagesBox.append(message);
+        chatScrollToBottom();
     };
 
     const sendMessage = (block) => {
@@ -45,7 +51,7 @@ $(document).ready(function() {
             return;
         }
 
-        socketio.emit("message", {
+        socketio.emit("server_message", {
             message: messageText,
             time: `${addZero(date.getHours())}:${addZero(date.getMinutes())}`
         });
@@ -54,32 +60,41 @@ $(document).ready(function() {
         messageInput.focus();
     };
 
-    socketio.on("message", (data) => {
+    socketio.on("client_message", (data) => {
         createMessage(data.name, data.color, data.message);
     });
 
-    socketio.on("play", (data) => {
+    socketio.on("client_play", (data) => {
         isInitialPlay = false;
-        if (Math.abs(data.time - player.api("time")) > 1) {
-            player.api("seek", data.time);
-        }
-        if (!player.api("playing")) {
-            player.api("play");
+        if (data.user !== userId) {
+            if (Math.abs(data.time - player.api("time")) > 1) {
+                isInitialSeek = false;
+                player.api("seek", data.time);
+                console.log("Socket seek: ", data.user);
+                isInitialSeek = true;
+            }
+            if (!player.api("playing")) {
+                player.api("play");
+                console.log("Socket play: ", data.user);
+            }
         }
         createMessage(data.name, data.color, data.message);
         isInitialPlay = true;
     });
 
-    socketio.on("pause", (data) => {
+    socketio.on("client_pause", (data) => {
         isInitialPause = false;
-        if (player.api("playing")) {
-            player.api("pause");
+        if (data.user !== userId) {
+            if (player.api("playing")) {
+                player.api("pause");
+                console.log("Socket pause: ", data.user);
+            }
         }
         createMessage(data.name, data.color, data.message);
         isInitialPause = true;
     });
 
-    socketio.on("seek", (data) => {
+    socketio.on("client_seek", (data) => {
         player.api("seek", data.time);
     });
 
@@ -95,7 +110,7 @@ $(document).ready(function() {
 
     playerFrame.on("play", (event) => {
         if (isInitialPlay) {
-            socketio.emit("play", { time: player.api("time"), user: userId });
+            socketio.emit("server_play", { time: player.api("time"), user: userId });
         } else {
             isInitialPlay = true;
         }
@@ -103,24 +118,28 @@ $(document).ready(function() {
 
     playerFrame.on("pause", (event) => {
         if (isInitialPause) {
-            socketio.emit("pause", { user: userId });
+            socketio.emit("server_pause", { user: userId });
         } else {
             isInitialPause = true;
         }
     });
 
-//    playerFrame.on("seek", (event) => {
-//        socketio.emit("seek", { time: player.api("time") });
-//    });
+    playerFrame.on("seek", (event) => {
+        console.log(1)
+        if (isInitialSeek) {
+            socketio.emit("server_seek", { time: player.api("time") });
+        } else {
+            isInitialSeek = true;
+        }
+    });
 
     playerFrame.on("fullscreen", () => {
         $(".chat.block.overlay").addClass("active");
-        messagesScroll.stop().animate({
-            scrollTop: messagesBox.last().prop("scrollHeight")
-        }, 500);
+        chatScrollToBottom();
     });
 
     playerFrame.on("exitfullscreen", () => {
         $(".chat.block.overlay").removeClass("active");
+        chatScrollToBottom();
     });
 });
