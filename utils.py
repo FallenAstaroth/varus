@@ -19,6 +19,11 @@ def get_label_by_sex(label: str, sex: str):
             "male": "Остановил плеер",
             "female": "Остановила плеер",
             "undefined": "Остановило плеер"
+        },
+        "seek": {
+            "male": "Перемотал плеер",
+            "female": "Перемотала плеер",
+            "undefined": "Перемотало плеер"
         }
     }
 

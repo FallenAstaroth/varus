@@ -5,7 +5,7 @@ from json import dumps
 from random import choice
 from string import ascii_uppercase
 
-from utils import get_label_by_sex, get_room_label
+from utils import get_label_by_sex
 from config import HOST, PORT, SECRET_KEY, UNSAFE_WERKZEUG, DEBUG
 
 app = Flask(__name__)
@@ -133,12 +133,6 @@ def play(data):
     if room not in rooms:
         return
 
-    if rooms[room]["users"][data["user"]]["is_busy"]:
-        return
-
-    for key, value in rooms[room]["users"].items():
-        rooms[room]["users"][key]["is_busy"] = True
-
     content = {
         "message": render_template(
             "blocks/message.html",
@@ -164,12 +158,6 @@ def pause(data):
     if room not in rooms:
         return
 
-    # if rooms[room]["users"][data["user"]]["is_busy"]:
-    #     return
-    #
-    # for key, value in rooms[room]["users"].items():
-    #     rooms[room]["users"][key]["is_busy"] = True
-
     content = {
         "message": render_template(
             "blocks/message.html",
@@ -193,49 +181,18 @@ def seek(data):
     if room not in rooms:
         return
 
-    # if rooms[room]["users"][data["user"]]["is_busy"]:
-    #     return
-    #
-    # for key, value in rooms[room]["users"].items():
-    #     rooms[room]["users"][key]["is_busy"] = True
-
     content = {
-        "name": session.get("name"),
-        "color": session.get("color"),
+        "message": render_template(
+            "blocks/message.html",
+            name=session.get("name"),
+            color=session.get("color"),
+            message=get_label_by_sex("seek", session.get("sex")),
+            icon="seek"
+        ),
         "time": data["time"]
     }
 
     emit("client_seek", content, to=room)
-
-
-@socketio.on("server_user_ready")
-def user_ready(data):
-    room = session.get("room")
-    user = data["user"]
-    users = rooms[room]["users"]
-
-    print(socketio.server.manager.get_participants(room))
-
-    if room not in rooms:
-        return
-
-    users[user]["is_busy"] = False
-
-    for key, value in users.items():
-        if users[key]["is_busy"]:
-            return
-
-    content = {
-        "message": render_template(
-            "blocks/message.html",
-            name="Комната",
-            color="#696cff",
-            message=get_room_label("sync"),
-            icon="bell"
-        )
-    }
-
-    emit("client_all_ready", content, to=room)
 
 
 @socketio.on("connect")
@@ -290,12 +247,6 @@ def disconnect():
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "disconnect"
     emit("client_message", content, to=room)
-
-
-@socketio.on("set_user_id")
-def set_user_id(data):
-    room = session.get("room")
-    rooms[room]["users"][data["user"]] = {"is_busy": False}
 
 
 if __name__ == "__main__":

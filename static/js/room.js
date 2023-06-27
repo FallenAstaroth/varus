@@ -2,7 +2,6 @@ $(document).ready(function() {
     let socketio = io();
     let date = new Date();
     let userId = Math.random().toString(36).substring(2, 15);
-    console.log(userId)
 
     function addZero(num) {
         return String(num).padStart(2, '0');
@@ -22,9 +21,9 @@ $(document).ready(function() {
 
     cloneChatToOverlay();
 
-    let isInitialPlay = true,
-        isInitialPause = true,
-        isInitialSeek = true;
+    let isInitialPlay = false,
+        isInitialPause = false,
+        isInitialSeek = false;
 
     const playerFrame = $("#player"),
           messagesBox = $(".chat-box .messages"),
@@ -65,37 +64,33 @@ $(document).ready(function() {
     });
 
     socketio.on("client_play", (data) => {
-        isInitialPlay = false;
-        if (data.user !== userId) {
-            if (Math.abs(data.time - player.api("time")) > 1) {
-                isInitialSeek = false;
-                player.api("seek", data.time);
-                console.log("Socket seek: ", data.user);
-                isInitialSeek = true;
-            }
-            if (!player.api("playing")) {
-                player.api("play");
-                console.log("Socket play: ", data.user);
-            }
+        isInitialPlay = true;
+        if (Math.abs(data.time - player.api("time")) > 1) {
+            player.api("seek", data.time);
+        }
+        if (!player.api("playing")) {
+            player.api("play");
         }
         createMessage(data.name, data.color, data.message);
-        isInitialPlay = true;
+        isInitialPlay = false;
     });
 
     socketio.on("client_pause", (data) => {
-        isInitialPause = false;
-        if (data.user !== userId) {
-            if (player.api("playing")) {
-                player.api("pause");
-                console.log("Socket pause: ", data.user);
-            }
+        isInitialPause = true;
+        if (player.api("playing")) {
+            player.api("pause");
         }
         createMessage(data.name, data.color, data.message);
-        isInitialPause = true;
+        isInitialPause = false;
     });
 
     socketio.on("client_seek", (data) => {
-        player.api("seek", data.time);
+        isInitialSeek = true;
+        if (Math.abs(data.time - player.api("time")) > 1) {
+            player.api("seek", data.time);
+        }
+        createMessage(data.name, data.color, data.message);
+        isInitialSeek = false;
     });
 
     chatInputs.on("click", ".message-send", function() {
@@ -108,28 +103,27 @@ $(document).ready(function() {
         }
     });
 
-    playerFrame.on("play", (event) => {
-        if (isInitialPlay) {
-            socketio.emit("server_play", { time: player.api("time"), user: userId });
+    playerFrame.on("userplay", (event) => {
+        if (!isInitialPlay) {
+            socketio.emit("server_play", { user: userId, time: player.api("time") });
         } else {
-            isInitialPlay = true;
+            isInitialPlay = false
         }
     });
 
     playerFrame.on("pause", (event) => {
-        if (isInitialPause) {
+        if (!isInitialPause) {
             socketio.emit("server_pause", { user: userId });
         } else {
-            isInitialPause = true;
+            isInitialPause = false
         }
     });
 
-    playerFrame.on("seek", (event) => {
-        console.log(1)
-        if (isInitialSeek) {
-            socketio.emit("server_seek", { time: player.api("time") });
+    playerFrame.on("userseek", (event) => {
+        if (!isInitialSeek) {
+            socketio.emit("server_seek", { user: userId, time: player.api("time") });
         } else {
-            isInitialSeek = true;
+            isInitialSeek = false
         }
     });
 
