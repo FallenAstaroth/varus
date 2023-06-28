@@ -35,8 +35,9 @@
 }
 
 .room-page .chat.block .chat-box {
-  height: calc(100% - 80px);
+  height: calc(100% - 90px);
   margin-top: 20px;
+  margin-bottom: 10px;
   border-top: 1px solid #444564;
   overflow-y: auto;
   padding-right: 10px;
@@ -60,10 +61,6 @@
   word-wrap: break-word;
   margin-top: 10px;
   font-size: .9rem;
-}
-
-.room-page .chat.block .chat-box .messages .text:last-child {
-  margin-bottom: 10px;
 }
 
 .room-page .chat.block .chat-box .messages .text.additional {
@@ -186,10 +183,6 @@
     font-size: .7rem;
     margin-top: 8px;
     padding: 1px 0;
-  }
-
-  .room-page .chat.block .chat-box .messages .text:last-child {
-    margin-bottom: 8px;
   }
 
   .room-page .chat.block .chat-box .messages .text .header .time {
