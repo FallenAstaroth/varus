@@ -6,6 +6,8 @@
     <title>Varus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+    <script src="{{ url_for('static', filename='js/lib/jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </head>
 <body class="index-page">
     <div class="wrapper">
@@ -14,7 +16,7 @@
             <div class="label-input">
                 <label class="form-label" for="name">Имя</label>
                 <div class="name-inputs">
-                    <input type="text" class="form-control" placeholder="Джонни Депп" name="name" id="name" value="{{ data['name'] }}" autofocus autocomplete="off"/>
+                    <input type="text" class="form-control" placeholder="Джонни Депп" name="name" id="nick_text" value="{{ data['name'] }}" autofocus autocomplete="off"/>
                     <input type="color" class="form-color-input" name="nick_color" id="nick_color" value="{% if data['color'] %}{{ data['color'] }}{% else %}#c76ad9{% endif %}">
                 </div>
                 {% if data["error"] and data["error"]["type"] == "name" %}
