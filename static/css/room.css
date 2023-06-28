@@ -185,6 +185,7 @@
     line-height: 1.2;
     font-size: .7rem;
     margin-top: 8px;
+    padding: 1px 0;
   }
 
   .room-page .chat.block .chat-box .messages .text:last-child {

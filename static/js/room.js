@@ -28,7 +28,9 @@ $(document).ready(function() {
     const playerFrame = $("#player"),
           messagesBox = $(".chat-box .messages"),
           messagesScroll = $(".chat-box"),
-          chatInputs = $(".chat-inputs");
+          chatInputs = $(".chat-inputs"),
+          seekPlus = $("#oframeplayer > pjsdiv:nth-child(21) > pjsdiv:nth-child(3)"),
+          seekMinus = $("#oframeplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(3)");
 
     const chatScrollToBottom = () => {
         messagesScroll.stop().animate({
@@ -104,27 +106,23 @@ $(document).ready(function() {
     });
 
     playerFrame.on("userplay", (event) => {
-        if (!isInitialPlay) {
-            socketio.emit("server_play", { user: userId, time: player.api("time") });
-        } else {
-            isInitialPlay = false
-        }
+        socketio.emit("server_play", { user: userId, time: player.api("time") });
     });
 
     playerFrame.on("pause", (event) => {
-        if (!isInitialPause) {
-            socketio.emit("server_pause", { user: userId });
-        } else {
-            isInitialPause = false
-        }
+        socketio.emit("server_pause", { user: userId });
     });
 
-    playerFrame.on("userseek", (event) => {
-        if (!isInitialSeek) {
-            socketio.emit("server_seek", { user: userId, time: player.api("time") });
-        } else {
-            isInitialSeek = false
-        }
+    playerFrame.on("line", (event) => {
+        socketio.emit("server_seek", { user: userId, time: event.originalEvent.info });
+    });
+
+    seekPlus.on("click", (event) => {
+        socketio.emit("server_seek", { user: userId, time: player.api("time") + 15 });
+    });
+
+    seekMinus.on("click", (event) => {
+        socketio.emit("server_seek", { user: userId, time: player.api("time") - 15 });
     });
 
     playerFrame.on("fullscreen", () => {
