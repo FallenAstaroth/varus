@@ -13,7 +13,6 @@ app.config["SECRET_KEY"] = SECRET_KEY
 socketio = SocketIO(app)
 
 rooms = {}
-ids = []
 
 
 def generate_unique_code(length):
@@ -247,6 +246,12 @@ def disconnect():
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "disconnect"
     emit("client_message", content, to=room)
+
+
+@socketio.on("chat_clear")
+def chat_clear():
+    room = session.get("room")
+    rooms[room]["last_event"] = "connect"
 
 
 if __name__ == "__main__":

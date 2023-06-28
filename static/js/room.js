@@ -30,7 +30,8 @@ $(document).ready(function() {
           messagesScroll = $(".chat-box"),
           chatInputs = $(".chat-inputs"),
           seekPlus = $("#oframeplayer > pjsdiv:nth-child(21) > pjsdiv:nth-child(3)"),
-          seekMinus = $("#oframeplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(3)");
+          seekMinus = $("#oframeplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(3)"),
+          clearButton = $(".chat-clear");
 
     const chatScrollToBottom = () => {
         messagesScroll.stop().animate({
@@ -103,6 +104,11 @@ $(document).ready(function() {
         if (event.which == 13) {
             sendMessage($(this));
         }
+    });
+
+    clearButton.on("click", function() {
+        messagesBox.empty();
+        socketio.emit("chat_clear");
     });
 
     playerFrame.on("userplay", (event) => {

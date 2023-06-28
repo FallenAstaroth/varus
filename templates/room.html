@@ -21,13 +21,16 @@
                 <h2 class="block-title">Код комнаты: <span class="block-code">{{ code }}</span></h2>
             </div>
             <div class="chat block">
-                <h2 class="block-title">Чат комнаты</h2>
+                <div class="top">
+                    <h2 class="block-title">Чат комнаты</h2>
+                    <button class="btn btn-primary chat-clear"><img class="icon" src="../../static/img/svg/trash.svg"></button>
+                </div>
                 <div class="chat-box">
                     <div class="messages"></div>
                 </div>
                 <div class="chat-inputs">
                     <input type="text" class="form-control message-input"  placeholder="Сообщение" name="message" autocomplete="off"/>
-                    <button type="button" class="btn btn-primary message-send" name="send">Send</button>
+                    <button type="button" class="btn btn-primary message-send" name="send"><img class="icon" src="../../static/img/svg/send.svg"></button>
                 </div>
             </div>
         </div>
