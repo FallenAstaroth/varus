@@ -81,13 +81,45 @@
 .room-page .chat.block .chat-box .messages .text {
   color: #a5a5b7;
   line-height: 1.4;
-  word-wrap: break-word;
   margin-top: 10px;
   font-size: .9rem;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background-color: #35365f;
+  width: max-content;
+  max-width: 70%;
+}
+
+.room-page .chat.block .chat-box .messages .text.your {
+    margin-left: auto;
 }
 
 .room-page .chat.block .chat-box .messages .text.additional {
-  margin-top: 0;
+  margin-top: 6px;
+}
+
+.room-page .chat.block .chat-box .messages .text.event {
+  width: 100%;
+  max-width: unset;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: unset;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 5px 0;
+}
+
+.room-page .chat.block .chat-box .messages .text.event .name {
+  text-align: center;
+}
+
+.room-page .chat.block .chat-box .messages .text.event .icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  margin-right: 3px;
+  object-fit: contain;
 }
 
 .room-page .chat.block .chat-box .messages .text .header {
@@ -106,18 +138,13 @@
 
 .room-page .chat.block .chat-box .messages .text .header .time {
   font-size: .75rem;
+  margin-left: 15px;
+  margin-top: 3px;
 }
 
 .room-page .chat.block .chat-box .messages .text .message {
-  display: flex;
-  align-items: center;
-}
-
-.room-page .chat.block .chat-box .messages .text .message .icon {
-  width: 16px;
-  height: 16px;
-  margin-right: 3px;
-  object-fit: contain;
+  word-break: break-word;
+  text-align: center;
 }
 
 .room-page .chat.block .chat-inputs {
@@ -235,16 +262,15 @@
     line-height: 1.2;
     font-size: .7rem;
     margin-top: 8px;
-    padding: 1px 0;
+    padding: 5px 8px;
   }
-
   .room-page .chat.block .chat-box .messages .text .header .time {
     font-size: .65rem;
   }
 
-  .room-page .chat.block .chat-box .messages .text .message .icon {
-    width: 11px;
-    height: 11px;
-    margin-right: 3px;
+  .room-page .chat.block .chat-box .messages .text.event .icon {
+    height: 13px;
+    width: 13px;
+    margin-top: 0;
   }
 }

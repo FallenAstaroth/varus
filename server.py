@@ -116,7 +116,8 @@ def message(data):
             time=data["time"],
             message=data["message"],
             additional=True if rooms[room].get("last_message") == name and rooms[room]["last_event"] == "message" else False
-        )
+        ),
+        "user": data["user"]
     }
 
     rooms[room]["last_message"] = name
@@ -134,14 +135,14 @@ def play(data):
 
     content = {
         "message": render_template(
-            "blocks/message.html",
+            "blocks/event.html",
             name=name,
             color=session.get("color"),
             message=get_label_by_sex("play", session.get("sex")),
-            icon="play"
+            icon="play",
+            event="play"
         ),
-        "time": data["time"],
-        "user": data["user"]
+        "time": data["time"]
     }
 
     rooms[room]["last_message"] = name
@@ -150,7 +151,7 @@ def play(data):
 
 
 @socketio.on("server_pause")
-def pause(data):
+def pause():
     room = session.get("room")
     name = session.get("name")
 
@@ -159,13 +160,13 @@ def pause(data):
 
     content = {
         "message": render_template(
-            "blocks/message.html",
+            "blocks/event.html",
             name=name,
             color=session.get("color"),
             message=get_label_by_sex("stop", session.get("sex")),
-            icon="stop"
-        ),
-        "user": data["user"]
+            icon="stop",
+            event="pause"
+        )
     }
 
     rooms[room]["last_message"] = name
@@ -182,11 +183,12 @@ def seek(data):
 
     content = {
         "message": render_template(
-            "blocks/message.html",
+            "blocks/event.html",
             name=session.get("name"),
             color=session.get("color"),
             message=get_label_by_sex("seek", session.get("sex")),
-            icon="seek"
+            icon="seek",
+            event="seek"
         ),
         "time": data["time"]
     }
@@ -205,7 +207,7 @@ def connect():
 
     content = {
         "message": render_template(
-            "blocks/message.html",
+            "blocks/event.html",
             name=name,
             color=session.get("color"),
             message=get_label_by_sex("join", session.get("sex")),
@@ -235,7 +237,7 @@ def disconnect():
 
     content = {
         "message": render_template(
-            "blocks/message.html",
+            "blocks/event.html",
             name=name,
             color=session.get("color"),
             message=get_label_by_sex("left", session.get("sex")),
