@@ -122,6 +122,10 @@
   object-fit: contain;
 }
 
+.room-page .chat.block .chat-box .messages .text.even .message {
+  text-align: center;
+}
+
 .room-page .chat.block .chat-box .messages .text .header {
   width: 100%;
   display: flex;
@@ -144,7 +148,6 @@
 
 .room-page .chat.block .chat-box .messages .text .message {
   word-break: break-word;
-  text-align: center;
 }
 
 .room-page .chat.block .chat-inputs {
