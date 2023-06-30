@@ -1,7 +1,6 @@
 <div class="text event">
     <p class="message">
-        {% if icon %}<img class="icon" src="../../static/img/svg/{{ icon }}.svg">{% endif %}
-        <span class="name" style="color:{{ color }}">{{ name }}</span>
+        <span class="name" style="color:{{ color }}">{% if icon %}<img class="icon" src="../../static/img/svg/{{ icon }}.svg">{% endif %}{{ name }}</span>
         {{ message }}
     </p>
 </div>

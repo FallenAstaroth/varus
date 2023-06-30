@@ -1,6 +1,5 @@
 $(document).ready(function() {
     let socketio = io();
-    let date = new Date();
     let userId = Math.random().toString(36).substring(2, 15);
 
     function addZero(num) {
@@ -37,9 +36,6 @@ $(document).ready(function() {
 
     const createMessage = (name, color, message, user) => {
         let processedMessage = $(message);
-        console.log(message)
-        console.log(processedMessage)
-        console.log(user, userId)
         if (user === userId) {
             processedMessage.addClass("your");
         }
@@ -55,6 +51,8 @@ $(document).ready(function() {
             messageInput.focus();
             return;
         }
+
+        let date = new Date();
 
         socketio.emit("server_message", {
             message: messageText,
