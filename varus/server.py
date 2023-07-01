@@ -70,7 +70,8 @@ def home():
             rooms[room] = {
                 "count": 0,
                 "links": dumps([{"title": "123", "file": link} for link in links]),
-                "users": {}
+                "users": {},
+                "last_message_id": 1
             }
 
         elif code not in rooms:
@@ -115,12 +116,14 @@ def message(data):
             color=session.get("color"),
             time=data["time"],
             message=data["message"],
-            additional=True if rooms[room].get("last_message") == name and rooms[room]["last_event"] == "message" else False
+            additional=True if rooms[room].get("last_message") == name and rooms[room]["last_event"] == "message" else False,
+            message_id=rooms[room]["last_message_id"]
         ),
         "user": data["user"]
     }
 
     rooms[room]["last_message"] = name
+    rooms[room]["last_message_id"] += 1
     rooms[room]["last_event"] = "message"
     emit("client_message", content, to=room)
 
@@ -228,12 +231,6 @@ def connect():
 def disconnect():
     room = session.get("room")
     name = session.get("name")
-    leave_room(room)
-
-    if room in rooms:
-        rooms[room]["count"] -= 1
-        if rooms[room]["count"] <= 0:
-            del rooms[room]
 
     content = {
         "message": render_template(
@@ -247,7 +244,14 @@ def disconnect():
 
     rooms[room]["last_message"] = name
     rooms[room]["last_event"] = "disconnect"
+
     emit("client_message", content, to=room)
+    leave_room(room)
+
+    if room in rooms:
+        rooms[room]["count"] -= 1
+        if rooms[room]["count"] <= 0:
+            del rooms[room]
 
 
 @socketio.on("chat_clear")

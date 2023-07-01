@@ -22,6 +22,7 @@ $(document).ready(function() {
 
     const playerFrame = $("#player"),
           messagesBox = $(".chat-box .messages"),
+          actionsBox = $(".chat-box .actions"),
           messagesScroll = $(".chat-box"),
           chatInputs = $(".chat-inputs"),
           seekPlus = $("#oframeplayer > pjsdiv:nth-child(21) > pjsdiv:nth-child(3)"),
@@ -107,11 +108,11 @@ $(document).ready(function() {
         socketio.emit("chat_clear");
     });
 
-    playerFrame.on("userplay", (event) => {
+    playerFrame.on("userplay", () => {
         socketio.emit("server_play", { time: player.api("time") });
     });
 
-    playerFrame.on("userpause", (event) => {
+    playerFrame.on("userpause", () => {
         socketio.emit("server_pause");
     });
 
@@ -119,11 +120,11 @@ $(document).ready(function() {
         socketio.emit("server_seek", { time: event.originalEvent.info });
     });
 
-    seekPlus.on("click", (event) => {
+    seekPlus.on("click", () => {
         socketio.emit("server_seek", { time: player.api("time") + 15 });
     });
 
-    seekMinus.on("click", (event) => {
+    seekMinus.on("click", () => {
         socketio.emit("server_seek", { time: player.api("time") - 15 });
     });
 
@@ -136,4 +137,8 @@ $(document).ready(function() {
         $(".chat.block.overlay").removeClass("active");
         chatScrollToBottom();
     });
+
+//    messagesBox.on("click", ".text:not(.event)", () => {
+//        actionsBox.fadeIn(200);
+//    });
 });

@@ -1,7 +1,9 @@
-<div class="text{% if additional %} additional{% endif %}">
-    <div class="header">
-        <p class="name" style="color:{{ color }}">{{ name }}</p>
-        <p class="time">{% if time %}{{ time }}{% endif %}</p>
+<div class="text{% if additional %} additional{% endif %}" data-id="{{ message_id }}">
+    <div class="message-wrapper">
+        <div class="header">
+            <p class="name" style="color:{{ color }}">{{ name }}</p>
+            <p class="time">{% if time %}{{ time }}{% endif %}</p>
+        </div>
+        <p class="message">{{ message }}</p>
     </div>
-    <p class="message">{{ message }}</p>
 </div>

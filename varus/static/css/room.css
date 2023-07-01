@@ -59,6 +59,7 @@
 }
 
 .room-page .chat.block .chat-box {
+  position: relative;
   height: calc(100% - 90px);
   margin-bottom: 10px;
   border-top: 1px solid #444564;
@@ -83,14 +84,18 @@
   line-height: 1.4;
   margin-top: 10px;
   font-size: .9rem;
+}
+
+.room-page .chat.block .chat-box .messages .text .message-wrapper {
   padding: 5px 8px;
   border-radius: var(--border-radius);
-  background-color: #35365f;
+  background-color: #323249;
+  box-shadow: var(--box-shadow);
   width: max-content;
   max-width: 70%;
 }
 
-.room-page .chat.block .chat-box .messages .text.your {
+.room-page .chat.block .chat-box .messages .text.your .message-wrapper {
     margin-left: auto;
 }
 
@@ -151,6 +156,29 @@
   word-break: break-word;
 }
 
+.room-page .chat.block .chat-box .actions {
+  display: none;
+  position: absolute;
+  color: #a5a5b7;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.room-page .chat.block .chat-box .actions .actions-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
+  max-width: 70%;
+  padding: 10px;
+  background-color: rgba(50, 50, 73, 1);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
 .room-page .chat.block .chat-inputs {
   display: flex;
   justify-content: space-between;
@@ -176,14 +204,15 @@
   height: calc(100% - 200px);
   background-color: rgba(43, 44, 64, .7);
   z-index: 1;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .room-page .chat.block.overlay.active {
   display: block;
 }
 
-.room-page .chat.block.overlay .chat-box .messages .text {
-  background-color: rgba(53, 54, 95, .7);
+.room-page .chat.block.overlay .chat-box .messages .text .message-wrapper {
+  background-color: rgba(50, 50, 73, .7);
 }
 
 .room-page .chat.block.overlay .chat-box .messages .text.event {
@@ -274,8 +303,8 @@
     line-height: 1.2;
     font-size: .7rem;
     margin-top: 8px;
-    padding: 5px 8px;
   }
+
   .room-page .chat.block .chat-box .messages .text .header .time {
     font-size: .65rem;
     margin-top: 1px;
