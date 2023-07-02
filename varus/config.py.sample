@@ -3,3 +3,8 @@ PORT = 5000
 SECRET_KEY = "varus-tv"
 DEBUG = True
 UNSAFE_WERKZEUG = True
+LANGUAGES = {
+    "en": "English",
+    "ru": "Russian",
+    "uk_UA": "Ukrainian"
+}

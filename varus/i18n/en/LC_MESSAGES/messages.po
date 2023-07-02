@@ -1,0 +1,164 @@
+# English translations for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-07-02 15:18+0300\n"
+"PO-Revision-Date: 2023-07-02 15:18+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: varus/utils.py:7
+msgid "joined the room (male)"
+msgstr "joined the room"
+
+#: varus/utils.py:8
+msgid "joined the room (female)"
+msgstr "joined the room"
+
+#: varus/utils.py:9
+msgid "joined the room (undefined)"
+msgstr "joined the room"
+
+#: varus/utils.py:12
+msgid "left the room (male)"
+msgstr "left the room"
+
+#: varus/utils.py:13
+msgid "left the room (female)"
+msgstr "left the room"
+
+#: varus/utils.py:14
+msgid "left the room (undefined)"
+msgstr "left the room"
+
+#: varus/utils.py:17
+msgid "started the player (male)"
+msgstr "started the player"
+
+#: varus/utils.py:18
+msgid "started the player (female)"
+msgstr "started the player"
+
+#: varus/utils.py:19
+msgid "started the player (undefined)"
+msgstr "started the player"
+
+#: varus/utils.py:22
+msgid "paused the player (male)"
+msgstr "paused the player"
+
+#: varus/utils.py:23
+msgid "paused the player (female)"
+msgstr "paused the player"
+
+#: varus/utils.py:24
+msgid "paused the player (undefined)"
+msgstr "paused the player"
+
+#: varus/utils.py:27
+msgid "rewound the player (male)"
+msgstr "rewound the player"
+
+#: varus/utils.py:28
+msgid "rewound the player (female)"
+msgstr "rewound the player"
+
+#: varus/utils.py:29
+msgid "rewound the player (undefined)"
+msgstr "rewound the player"
+
+#: varus/utils.py:38
+msgid "Enter a name"
+msgstr "Enter a name"
+
+#: varus/utils.py:39
+msgid "Enter room code"
+msgstr "Enter room code"
+
+#: varus/utils.py:40
+msgid "Enter link"
+msgstr "Enter link"
+
+#: varus/utils.py:41
+msgid "Such a room does not exist"
+msgstr "Such a room does not exist"
+
+#: varus/templates/index.html:21
+msgid "Name"
+msgstr "Name"
+
+#: varus/templates/index.html:23
+msgid "Johnny Depp"
+msgstr "Johnny Depp"
+
+#: varus/templates/index.html:31
+msgid "Sex"
+msgstr "Sex"
+
+#: varus/templates/index.html:35
+msgid "Male"
+msgstr "Male"
+
+#: varus/templates/index.html:39
+msgid "Female"
+msgstr "Female"
+
+#: varus/templates/index.html:43
+msgid "Who am I?"
+msgstr "Who am I?"
+
+#: varus/templates/index.html:48
+msgid "remains"
+msgstr "remains"
+
+#: varus/templates/index.html:51
+msgid "Link"
+msgstr "Link"
+
+#: varus/templates/index.html:52
+msgid "YouTube or file"
+msgstr "YouTube or file"
+
+#: varus/templates/index.html:57
+msgid "Create a room"
+msgstr "Create a room"
+
+#: varus/templates/index.html:59
+msgid "or"
+msgstr "or"
+
+#: varus/templates/index.html:62
+msgid "Room code"
+msgstr "Room code"
+
+#: varus/templates/index.html:68
+msgid "Join"
+msgstr "Join"
+
+#: varus/templates/room.html:21
+msgid "Room code:"
+msgstr "Room code:"
+
+#: varus/templates/room.html:25
+msgid "Room chat"
+msgstr "Room chat"
+
+#: varus/templates/room.html:32
+msgid "Reply"
+msgstr "Reply"
+
+#: varus/templates/room.html:37
+msgid "Message"
+msgstr "Message"
+

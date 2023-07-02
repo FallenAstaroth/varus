@@ -248,6 +248,17 @@ h1, h2, h3, h4, h5, h6, h7, p, span {
     border-radius: 0.375rem;
 }
 
+.language-switcher {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.language-switcher a {
+  width: 35px;
+}
+
 @media screen and (max-width: 768px) {
   .wrapper {
     padding: 10px !important;

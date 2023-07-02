@@ -1,18 +1,32 @@
+from flask_babel import Babel
 from flask_socketio import join_room, leave_room, emit, SocketIO
 from flask import Flask, render_template, request, session, redirect, url_for
 
+from os import path
 from json import dumps
 from random import choice
 from string import ascii_uppercase
 
-from utils import get_label_by_sex
-from config import HOST, PORT, SECRET_KEY, UNSAFE_WERKZEUG, DEBUG
+from utils import get_label_by_sex, get_error
+from config import HOST, PORT, SECRET_KEY, UNSAFE_WERKZEUG, DEBUG, LANGUAGES
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
+app.config["LANGUAGES"] = LANGUAGES
+app.config["BABEL_TRANSLATION_DIRECTORIES"] = path.join(path.abspath(path.dirname(__file__)), "i18n")
 socketio = SocketIO(app)
 
 rooms = {}
+
+
+def get_locale():
+    language = session.get("language")
+    if language:
+        return language
+    return request.accept_languages.best_match(app.config["LANGUAGES"].keys())
+
+
+babel = Babel(app, locale_selector=get_locale)
 
 
 def generate_unique_code(length):
@@ -23,9 +37,16 @@ def generate_unique_code(length):
         return code
 
 
+@app.context_processor
+def inject_conf_var():
+    return dict(
+        AVAILABLE_LANGUAGES=app.config["LANGUAGES"],
+        CURRENT_LANGUAGE=session.get("language", request.accept_languages.best_match(app.config["LANGUAGES"].keys()))
+    )
+
+
 @app.route("/", methods=["POST", "GET"])
-def home():
-    session.clear()
+def index():
     if request.method == "POST":
         name = request.form.get("name")
         color = request.form.get("nick_color")
@@ -48,13 +69,13 @@ def home():
         if not name:
 
             data["error"]["type"] = "name"
-            data["error"]["text"] = "Введите имя"
+            data["error"]["text"] = get_error("name")
             return render_template("index.html", data=data)
 
         if request.form.get("join", False) is not False and not code:
 
             data["error"]["type"] = "code"
-            data["error"]["text"] = "Введите код комнаты"
+            data["error"]["text"] = get_error("code_not_specified")
             return render_template("index.html", data=data)
 
         room = code
@@ -63,7 +84,7 @@ def home():
 
             if links[0] == "":
                 data["error"]["type"] = "links"
-                data["error"]["text"] = "Введите ссылку"
+                data["error"]["text"] = get_error("links")
                 return render_template("index.html", data=data)
 
             room = generate_unique_code(4)
@@ -77,7 +98,7 @@ def home():
         elif code not in rooms:
 
             data["error"]["type"] = "code"
-            data["error"]["text"] = "Такая комната не существует"
+            data["error"]["text"] = get_error("code_not_exist")
             return render_template("index.html", data=data)
 
         session.update({
@@ -92,11 +113,17 @@ def home():
     return render_template("index.html", data={})
 
 
+@app.route("/language/<language>")
+def set_language(language: str = "en"):
+    session.update({"language": language})
+    return redirect(request.referrer)
+
+
 @app.route("/room")
 def room():
     room = session.get("room")
     if room is None or session.get("name") is None or room not in rooms:
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
 
     return render_template("room.html", code=room, links=rooms[room]["links"])
 
@@ -247,6 +274,7 @@ def disconnect():
 
     emit("client_message", content, to=room)
     leave_room(room)
+    session.clear()
 
     if room in rooms:
         rooms[room]["count"] -= 1
@@ -257,7 +285,7 @@ def disconnect():
 @socketio.on("chat_clear")
 def chat_clear():
     room = session.get("room")
-    rooms[room]["last_event"] = "connect"
+    rooms[room]["last_event"] = "clear"
 
 
 if __name__ == "__main__":

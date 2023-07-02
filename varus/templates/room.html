@@ -18,23 +18,25 @@
                 <div class="player-frame">
                     <div class="video" id="player" data-links="{{ links }}"></div>
                 </div>
-                <h2 class="block-title">Код комнаты: <span class="block-code">{{ code }}</span></h2>
+                <div class="info">
+                    <h2 class="block-title">{{ _('Room code:') }} <span class="block-code">{{ code }}</span></h2>
+                </div>
             </div>
             <div class="chat block">
                 <div class="top">
-                    <h2 class="block-title">Чат комнаты</h2>
+                    <h2 class="block-title">{{ _('Room chat') }}</h2>
                     <button class="btn btn-primary chat-clear"><img class="icon" src="../../static/img/svg/trash.svg"></button>
                 </div>
                 <div class="chat-box">
                     <div class="messages"></div>
                     <div class="actions">
                         <div class="actions-wrapper">
-                            <span>Ответить</span>
+                            <span>{{ _('Reply') }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="chat-inputs">
-                    <input type="text" class="form-control message-input"  placeholder="Сообщение" name="message" autocomplete="off"/>
+                    <input type="text" class="form-control message-input"  placeholder="{{ _('Message') }}" name="message" autocomplete="off"/>
                     <button type="button" class="btn btn-primary message-send" name="send"><img class="icon" src="../../static/img/svg/send.svg"></button>
                 </div>
             </div>

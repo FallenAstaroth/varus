@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+.room-page .player.block .info {
+  display: flex;
+  justify-content: space-between;
+}
+
 .room-page .player-chat {
   display: flex;
   gap: 20px;
@@ -76,7 +81,11 @@
 }
 
 .room-page .chat.block .chat-box::-webkit-scrollbar-thumb {
-  background: #1e1f2e;
+  background-color: rgba(68, 69, 100, 0);
+}
+
+.room-page .chat.block:hover .chat-box::-webkit-scrollbar-thumb {
+  background-color: rgba(68, 69, 100, 1);
 }
 
 .room-page .chat.block .chat-box .messages .text {
@@ -84,6 +93,10 @@
   line-height: 1.4;
   margin-top: 10px;
   font-size: .9rem;
+}
+
+.room-page .chat.block .chat-box .messages .text:not(.event):last-child {
+  margin-bottom: 10px;
 }
 
 .room-page .chat.block .chat-box .messages .text .message-wrapper {
