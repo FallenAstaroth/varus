@@ -9,6 +9,12 @@
 .room-page .player.block .info {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.room-page .player.block .info .language-switcher {
+  margin-top: 0;
 }
 
 .room-page .player-chat {
@@ -57,10 +63,6 @@
 
 .room-page .chat.block .block-title {
   margin-top: 0;
-}
-
-.room-page .block-title {
-  margin-top: 20px;
 }
 
 .room-page .chat.block .chat-box {
@@ -251,6 +253,19 @@
 }
 
 @media screen and (max-width: 768px) {
+  .room-page .player.block .info {
+    margin-top: 0;
+    padding: 10px;
+  }
+
+  .room-page .player.block .info .language-switcher {
+    gap: 5px;
+  }
+
+  .room-page .player.block .info .language-switcher a {
+    width: 20px;
+  }
+
   .room-page .player-chat {
     height: 100%;
     flex-direction: column;
@@ -295,7 +310,6 @@
 
   .room-page .block .block-title {
     font-size: .9rem;
-    padding: 10px;
     margin-top: 0;
   }
 

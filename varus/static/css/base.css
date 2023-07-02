@@ -305,4 +305,12 @@ h1, h2, h3, h4, h5, h6, h7, p, span {
   .label-input {
     margin-top: .5rem;
   }
+
+  .language-switcher {
+    gap: 8px;
+  }
+
+  .language-switcher a {
+    width: 30px;
+  }
 }
