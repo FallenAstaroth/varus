@@ -1,36 +1,37 @@
-from flask_babel import gettext
+from flask_babel import gettext, force_locale
 
 
-def get_label_by_sex(label: str, sex: str):
+def get_label_by_sex(label: str, sex: str, locale: str):
     labels = {
         "join": {
-            "male": gettext("joined the room (male)"),
-            "female": gettext("joined the room (female)"),
-            "undefined": gettext("joined the room (undefined)")
+            "male": "joined the room (male)",
+            "female": "joined the room (female)",
+            "undefined": "joined the room (undefined)"
         },
         "left": {
-            "male": gettext("left the room (male)"),
-            "female": gettext("left the room (female)"),
-            "undefined": gettext("left the room (undefined)")
+            "male": "left the room (male)",
+            "female": "left the room (female)",
+            "undefined": "left the room (undefined)"
         },
         "play": {
-            "male": gettext("started the player (male)"),
-            "female": gettext("started the player (female)"),
-            "undefined": gettext("started the player (undefined)")
+            "male": "started the player (male)",
+            "female": "started the player (female)",
+            "undefined": "started the player (undefined)"
         },
         "stop": {
-            "male": gettext("paused the player (male)"),
-            "female": gettext("paused the player (female)"),
-            "undefined": gettext("paused the player (undefined)")
+            "male": "paused the player (male)",
+            "female": "paused the player (female)",
+            "undefined": "paused the player (undefined)"
         },
         "seek": {
-            "male": gettext("rewound the player (male)"),
-            "female": gettext("rewound the player (female)"),
-            "undefined": gettext("rewound the player (undefined)")
+            "male": "rewound the player (male)",
+            "female": "rewound the player (female)",
+            "undefined": "rewound the player (undefined)"
         }
     }
 
-    return labels.get(label, {}).get(sex, "undefined")
+    with force_locale(locale):
+        return gettext(labels.get(label, {}).get(sex, "undefined"))
 
 
 def get_error(error: str):
