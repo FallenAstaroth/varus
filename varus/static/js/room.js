@@ -35,7 +35,7 @@ $(document).ready(function() {
         }, 300);
     }
 
-    const createMessage = (name, color, message, user) => {
+    const createMessage = (message, user) => {
         let processedMessage = $(message);
         if (user === userId) {
             processedMessage.addClass("your");
@@ -66,7 +66,7 @@ $(document).ready(function() {
     };
 
     socketio.on("client_message", (data) => {
-        createMessage(data.name, data.color, data.message, data.user);
+        createMessage(data.message, data.user);
     });
 
     socketio.on("client_play", (data) => {
@@ -76,21 +76,21 @@ $(document).ready(function() {
         if (!player.api("playing")) {
             player.api("play");
         }
-        createMessage(data.name, data.color, data.message, data.user);
+        createMessage(data.message, undefined);
     });
 
     socketio.on("client_pause", (data) => {
         if (player.api("playing")) {
             player.api("pause");
         }
-        createMessage(data.name, data.color, data.message, data.user);
+        createMessage(data.message, undefined);
     });
 
     socketio.on("client_seek", (data) => {
         if (Math.abs(data.time - player.api("time")) > 1) {
             player.api("seek", data.time);
         }
-        createMessage(data.name, data.color, data.message, data.user);
+        createMessage(data.message, undefined);
     });
 
     chatInputs.on("click", ".message-send", function() {

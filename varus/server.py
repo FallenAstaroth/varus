@@ -42,6 +42,33 @@ def generate_unique_code(length):
         return code
 
 
+def send_event(room: str, name: str, color: str, sex: str, icon: str, event: str, emit_type: str, time: int = None) -> None:
+
+    translations = {}
+
+    for locale in app.config["LANGUAGES"].keys():
+        translations.update({
+            locale: render_template(
+                "blocks/event.html",
+                name=name,
+                color=color,
+                message=get_label_by_sex(event, sex, locale),
+                icon=icon,
+                event=event,
+            ),
+        })
+
+    for key, value in socketio.server.manager.rooms["/"][room].items():
+        content = {
+            "message": translations[socketio.server.environ[value]["saved_session"]["language"]],
+        }
+        if time:
+            content.update({
+                "time": time
+            })
+        emit(emit_type, content, to=key)
+
+
 @app.context_processor
 def inject_conf_var():
     return dict(
@@ -168,29 +195,12 @@ def play(data):
     if room not in user_rooms:
         return
 
-    events = {}
-
-    for locale in app.config["LANGUAGES"].keys():
-        events.update({
-            locale: render_template(
-                "blocks/event.html",
-                name=name,
-                color=session.get("color"),
-                message=get_label_by_sex("play", session.get("sex"), locale),
-                icon="play",
-                event="play",
-            ),
-        })
-
     user_rooms[room]["last_message"] = name
     user_rooms[room]["last_event"] = "play"
 
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        content = {
-            "message": events[socketio.server.environ[value]["saved_session"]["language"]],
-            "time": data["time"]
-        }
-        emit("client_play", content, to=key)
+    send_event(
+        room, name, session.get("color"), session.get("sex"), "play", "play", "client_play", data["time"]
+    )
 
 
 @socketio.on("server_pause")
@@ -201,28 +211,12 @@ def pause():
     if room not in user_rooms:
         return
 
-    events = {}
-
-    for locale in app.config["LANGUAGES"].keys():
-        events.update({
-            locale: render_template(
-                "blocks/event.html",
-                name=name,
-                color=session.get("color"),
-                message=get_label_by_sex("stop", session.get("sex"), locale),
-                icon="stop",
-                event="pause"
-            ),
-        })
-
     user_rooms[room]["last_message"] = name
     user_rooms[room]["last_event"] = "pause"
 
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        content = {
-            "message": events[socketio.server.environ[value]["saved_session"]["language"]],
-        }
-        emit("client_pause", content, to=key)
+    send_event(
+        room, name, session.get("color"), session.get("sex"), "pause", "pause", "client_pause"
+    )
 
 
 @socketio.on("server_seek")
@@ -232,26 +226,9 @@ def seek(data):
     if room not in user_rooms:
         return
 
-    events = {}
-
-    for locale in app.config["LANGUAGES"].keys():
-        events.update({
-            locale: render_template(
-                "blocks/event.html",
-                name=session.get("name"),
-                color=session.get("color"),
-                message=get_label_by_sex("seek", session.get("sex"), locale),
-                icon="seek",
-                event="seek"
-            ),
-        })
-
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        content = {
-            "message": events[socketio.server.environ[value]["saved_session"]["language"]],
-            "time": data["time"]
-        }
-        emit("client_seek", content, to=key)
+    send_event(
+        room, session.get("name"), session.get("color"), session.get("sex"), "seek", "seek", "client_seek", data["time"]
+    )
 
 
 @socketio.on("connect")
@@ -262,20 +239,6 @@ def connect():
     if room not in user_rooms:
         leave_room(room)
         return
-
-    events = {}
-
-    for locale in app.config["LANGUAGES"].keys():
-        events.update({
-            locale: render_template(
-                "blocks/event.html",
-                name=name,
-                color=session.get("color"),
-                message=get_label_by_sex("join", session.get("sex"), locale),
-                icon="bell",
-                event="connect"
-            ),
-        })
 
     join_room(room)
 
@@ -288,30 +251,15 @@ def connect():
         "count": count + 1,
     })
 
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        content = {
-            "message": events[socketio.server.environ[value]["saved_session"]["language"]],
-        }
-        emit("client_message", content, to=key)
+    send_event(
+        room, name, session.get("color"), session.get("sex"), "bell", "connect", "client_message"
+    )
 
 
 @socketio.on("disconnect")
 def disconnect():
     room = session.get("room")
     name = session.get("name")
-
-    events = {}
-
-    for locale in app.config["LANGUAGES"].keys():
-        events.update({
-            locale: render_template(
-                "blocks/event.html",
-                name=name,
-                color=session.get("color"),
-                message=get_label_by_sex("left", session.get("sex"), locale),
-                icon="bell"
-            ),
-        })
 
     # languages = user_rooms[room]["languages"].remove(session.get("language"))
 
@@ -320,11 +268,9 @@ def disconnect():
         "last_event": "disconnect",
     })
 
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        content = {
-            "message": events[socketio.server.environ[value]["saved_session"]["language"]],
-        }
-        emit("client_message", content, to=key)
+    send_event(
+        room, name, session.get("color"), session.get("sex"), "bell", "disconnect", "client_message"
+    )
 
     leave_room(room)
     session.clear()

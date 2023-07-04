@@ -3,12 +3,12 @@ from flask_babel import gettext, force_locale
 
 def get_label_by_sex(label: str, sex: str, locale: str):
     labels = {
-        "join": {
+        "connect": {
             "male": "joined the room (male)",
             "female": "joined the room (female)",
             "undefined": "joined the room (undefined)"
         },
-        "left": {
+        "disconnect": {
             "male": "left the room (male)",
             "female": "left the room (female)",
             "undefined": "left the room (undefined)"
@@ -18,7 +18,7 @@ def get_label_by_sex(label: str, sex: str, locale: str):
             "female": "started the player (female)",
             "undefined": "started the player (undefined)"
         },
-        "stop": {
+        "pause": {
             "male": "paused the player (male)",
             "female": "paused the player (female)",
             "undefined": "paused the player (undefined)"
