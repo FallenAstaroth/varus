@@ -4,6 +4,7 @@ from flask import render_template, request, session, redirect, url_for
 from json import dumps
 
 from misc import app, socketio, manager, translator, jutsu
+from varus.config import HOST, PORT, UNSAFE_WERKZEUG, DEBUG
 
 
 def send_event(room: str, name: str, color: str, sex: str, icon: str, event: str, emit_type: str, time: int = None) -> None:
@@ -320,3 +321,7 @@ def change_episode(data):
         emit("client_change_episode", user["content"], to=user["id"])
 
     manager.rooms[room]["last_video_id"] = last_id
+
+
+if __name__ == "__main__":
+    socketio.run(app, host=HOST, port=PORT, debug=DEBUG, allow_unsafe_werkzeug=UNSAFE_WERKZEUG)

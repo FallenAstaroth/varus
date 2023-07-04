@@ -4,9 +4,9 @@ from flask_socketio import SocketIO
 
 from os import path
 
-from .providers import JutSu
-from .modules import Manager, Translator
-from .config import SECRET_KEY, LANGUAGES
+from providers import JutSu
+from modules import Manager, Translator
+from config import SECRET_KEY, LANGUAGES
 
 
 app = Flask(__name__)
