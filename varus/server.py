@@ -1,45 +1,10 @@
-from flask_babel import Babel
-from flask_socketio import join_room, leave_room, emit, SocketIO, rooms
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask_socketio import join_room, leave_room, emit
+from flask import render_template, request, session, redirect, url_for
 
-from os import path
 from json import dumps
-from random import choice
-from string import ascii_uppercase
 
-from utils import get_label_by_sex, get_error
-from config import HOST, PORT, SECRET_KEY, UNSAFE_WERKZEUG, DEBUG, LANGUAGES
-
-app = Flask(__name__)
-app.config["SECRET_KEY"] = SECRET_KEY
-app.config["LANGUAGES"] = LANGUAGES
-app.config["BABEL_TRANSLATION_DIRECTORIES"] = path.join(path.abspath(path.dirname(__file__)), "i18n")
-socketio = SocketIO(app)
-
-user_rooms = {}
-
-
-def get_locale():
-    language = session.get("language")
-
-    if language:
-        return language
-
-    locale = request.accept_languages.best_match(app.config["LANGUAGES"].keys())
-    session.update({"language": locale})
-
-    return locale
-
-
-babel = Babel(app, locale_selector=get_locale)
-
-
-def generate_unique_code(length):
-    while True:
-        code = ''.join(choice(ascii_uppercase) for _ in range(length))
-        if code in user_rooms:
-            continue
-        return code
+from config import HOST, PORT, UNSAFE_WERKZEUG, DEBUG
+from misc import app, socketio, manager, translator
 
 
 def send_event(room: str, name: str, color: str, sex: str, icon: str, event: str, emit_type: str, time: int = None) -> None:
@@ -52,9 +17,8 @@ def send_event(room: str, name: str, color: str, sex: str, icon: str, event: str
                 "blocks/event.html",
                 name=name,
                 color=color,
-                message=get_label_by_sex(event, sex, locale),
+                message=translator.get_event(event, sex, locale),
                 icon=icon,
-                event=event,
             ),
         })
 
@@ -101,13 +65,13 @@ def index():
         if not name:
 
             data["error"]["type"] = "name"
-            data["error"]["text"] = get_error("name")
+            data["error"]["text"] = translator.get_error("name")
             return render_template("index.html", data=data)
 
         if request.form.get("join", False) is not False and not code:
 
             data["error"]["type"] = "code"
-            data["error"]["text"] = get_error("code_not_specified")
+            data["error"]["text"] = translator.get_error("code_not_specified")
             return render_template("index.html", data=data)
 
         room = code
@@ -116,21 +80,21 @@ def index():
 
             if links[0] == "":
                 data["error"]["type"] = "links"
-                data["error"]["text"] = get_error("links")
+                data["error"]["text"] = translator.get_error("links")
                 return render_template("index.html", data=data)
 
-            room = generate_unique_code(4)
-            user_rooms[room] = {
+            room = manager.generate_room_code(4)
+            manager.rooms[room] = {
                 "count": 0,
                 "links": dumps([{"title": "123", "file": link} for link in links]),
                 "last_message_id": 1,
                 "languages": set()
             }
 
-        elif code not in user_rooms:
+        elif code not in manager.rooms:
 
             data["error"]["type"] = "code"
-            data["error"]["text"] = get_error("code_not_exist")
+            data["error"]["text"] = translator.get_error("code_not_exist")
             return render_template("index.html", data=data)
 
         session.update({
@@ -154,10 +118,10 @@ def set_language(language: str = "en"):
 @app.route("/room")
 def room():
     room = session.get("room")
-    if room is None or session.get("name") is None or room not in user_rooms:
+    if room is None or session.get("name") is None or room not in manager.rooms:
         return redirect(url_for("index"))
 
-    return render_template("room.html", code=room, links=user_rooms[room]["links"])
+    return render_template("room.html", code=room, links=manager.rooms[room]["links"])
 
 
 @socketio.on("server_message")
@@ -165,7 +129,7 @@ def message(data):
     room = session.get("room")
     name = session.get("name")
 
-    if room not in user_rooms:
+    if room not in manager.rooms:
         return
 
     content = {
@@ -175,15 +139,15 @@ def message(data):
             color=session.get("color"),
             time=data["time"],
             message=data["message"],
-            additional=True if user_rooms[room].get("last_message") == name and user_rooms[room]["last_event"] == "message" else False,
-            message_id=user_rooms[room]["last_message_id"]
+            additional=True if manager.rooms[room].get("last_message") == name and manager.rooms[room]["last_event"] == "message" else False,
+            message_id=manager.rooms[room]["last_message_id"]
         ),
         "user": data["user"]
     }
 
-    user_rooms[room]["last_message"] = name
-    user_rooms[room]["last_message_id"] += 1
-    user_rooms[room]["last_event"] = "message"
+    manager.rooms[room]["last_message"] = name
+    manager.rooms[room]["last_message_id"] += 1
+    manager.rooms[room]["last_event"] = "message"
     emit("client_message", content, to=room)
 
 
@@ -192,11 +156,11 @@ def play(data):
     room = session.get("room")
     name = session.get("name")
 
-    if room not in user_rooms:
+    if room not in manager.rooms:
         return
 
-    user_rooms[room]["last_message"] = name
-    user_rooms[room]["last_event"] = "play"
+    manager.rooms[room]["last_message"] = name
+    manager.rooms[room]["last_event"] = "play"
 
     send_event(
         room, name, session.get("color"), session.get("sex"), "play", "play", "client_play", data["time"]
@@ -208,11 +172,11 @@ def pause():
     room = session.get("room")
     name = session.get("name")
 
-    if room not in user_rooms:
+    if room not in manager.rooms:
         return
 
-    user_rooms[room]["last_message"] = name
-    user_rooms[room]["last_event"] = "pause"
+    manager.rooms[room]["last_message"] = name
+    manager.rooms[room]["last_event"] = "pause"
 
     send_event(
         room, name, session.get("color"), session.get("sex"), "pause", "pause", "client_pause"
@@ -223,7 +187,7 @@ def pause():
 def seek(data):
     room = session.get("room")
 
-    if room not in user_rooms:
+    if room not in manager.rooms:
         return
 
     send_event(
@@ -236,16 +200,16 @@ def connect():
     room = session.get("room")
     name = session.get("name")
 
-    if room not in user_rooms:
+    if room not in manager.rooms:
         leave_room(room)
         return
 
     join_room(room)
 
-    count = user_rooms[room]["count"]
-    # languages = user_rooms[room]["languages"].add(session.get("language"))
+    count = manager.rooms[room]["count"]
+    # languages = manager.rooms[room]["languages"].add(session.get("language"))
 
-    user_rooms[room].update({
+    manager.rooms[room].update({
         "last_message": name,
         "last_event": "connect",
         "count": count + 1,
@@ -261,9 +225,9 @@ def disconnect():
     room = session.get("room")
     name = session.get("name")
 
-    # languages = user_rooms[room]["languages"].remove(session.get("language"))
+    # languages = manager.rooms[room]["languages"].remove(session.get("language"))
 
-    user_rooms[room].update({
+    manager.rooms[room].update({
         "last_message": name,
         "last_event": "disconnect",
     })
@@ -275,16 +239,16 @@ def disconnect():
     leave_room(room)
     session.clear()
 
-    if room in user_rooms:
-        user_rooms[room]["count"] -= 1
-        if user_rooms[room]["count"] <= 0:
-            del user_rooms[room]
+    if room in manager.rooms:
+        manager.rooms[room]["count"] -= 1
+        if manager.rooms[room]["count"] <= 0:
+            del manager.rooms[room]
 
 
 @socketio.on("chat_clear")
 def chat_clear():
     room = session.get("room")
-    user_rooms[room]["last_event"] = "clear"
+    manager.rooms[room]["last_event"] = "clear"
 
 
 if __name__ == "__main__":
