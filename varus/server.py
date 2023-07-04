@@ -3,7 +3,6 @@ from flask import render_template, request, session, redirect, url_for
 
 from json import dumps
 
-from config import HOST, PORT, UNSAFE_WERKZEUG, DEBUG
 from misc import app, socketio, manager, translator, jutsu
 
 
@@ -321,7 +320,3 @@ def change_episode(data):
         emit("client_change_episode", user["content"], to=user["id"])
 
     manager.rooms[room]["last_video_id"] = last_id
-
-
-if __name__ == "__main__":
-    socketio.run(app, host=HOST, port=PORT, debug=DEBUG, allow_unsafe_werkzeug=UNSAFE_WERKZEUG)
