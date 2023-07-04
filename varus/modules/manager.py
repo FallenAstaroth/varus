@@ -3,8 +3,6 @@ from flask import request, session
 from random import choice
 from string import ascii_uppercase
 
-from varus.utils.enums import Providers
-
 
 class Manager:
 

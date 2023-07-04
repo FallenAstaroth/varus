@@ -1,7 +1,7 @@
 from requests import Session
 from bs4 import BeautifulSoup
 
-from varus.utils.dataclasses import Season, Episode
+from ..utils.dataclasses import Season, Episode
 
 
 class JutSu:
