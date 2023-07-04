@@ -13,8 +13,28 @@
   margin-top: 20px;
 }
 
+.room-page .player.block .info .block-title {
+  white-space: nowrap;
+  padding-right: 5px;
+}
+
 .room-page .player.block .info .language-switcher {
   margin-top: 0;
+}
+
+.room-page .player.block .info .provider.jutsu {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.room-page .player.block .info .provider.jutsu .episodes {
+  width: 100%;
+}
+
+.room-page .player.block .info .provider.jutsu button .icon {
+  width: 23px;
+  height: 23px;
 }
 
 .room-page .player-chat {
@@ -265,6 +285,11 @@
 
   .room-page .player.block .info .language-switcher a {
     width: 20px;
+  }
+
+  .room-page .player.block .info .provider.jutsu button .icon {
+    width: 16px;
+    height: 16px;
   }
 
   .room-page .player-chat {

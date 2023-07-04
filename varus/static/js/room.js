@@ -1,5 +1,17 @@
+//Object.defineProperty(navigator, "userAgent", {
+//    get: function () { return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"; }
+//});
+
+//navigator.__defineGetter__("userAgent", function () {
+//    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+//});
+
+console.log(navigator.userAgent)
+
+let player;
+const socketio = io();
+
 $(document).ready(function() {
-    let socketio = io();
     let userId = Math.random().toString(36).substring(2, 15);
 
     function addZero(num) {
@@ -13,7 +25,7 @@ $(document).ready(function() {
         $("#oframeplayer").append(newBlock);
     }
 
-    let player = new Playerjs({
+    player = new Playerjs({
         id: "player",
         file: JSON.parse($("#player").attr("data-links"))
     });
@@ -142,3 +154,5 @@ $(document).ready(function() {
 //        actionsBox.fadeIn(200);
 //    });
 });
+
+export { socketio, player };
