@@ -121,7 +121,7 @@ def index():
                 }])
             })
 
-        elif "youtube.com" in link:
+        else:
 
             manager.rooms[room]["provider"] = {
                 "name": "youtube",
