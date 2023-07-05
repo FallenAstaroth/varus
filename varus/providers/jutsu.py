@@ -19,16 +19,26 @@ class JutSu:
         slug = url.split("/")[3]
         main_page = self.__session.get(url)
         soup = BeautifulSoup(main_page.text, "html.parser")
+        all_seasons = [value.text for value in soup.find_all("h2", {"class": "the-anime-season"})]
 
         seasons = []
-        for index, value in enumerate(soup.find_all("h2", {"class": "the-anime-season"})):
-            season_episodes = soup.find_all("a", href=lambda href: href and href.startswith(f"/{slug}/season-{index + 1}/episode"))
+        if len(all_seasons) == 0:
+            season_episodes = soup.find_all("a", href=lambda href: href and href.startswith(f"/{slug}/episode"))
             seasons.append(
                 Season(
-                    value.text,
+                    "1 сезон",
                     [Episode(episode.text, f'https://jut.su{episode["href"]}', index + 1) for index, episode in enumerate(season_episodes)]
                 )
             )
+        else:
+            for index, value in enumerate(all_seasons):
+                season_episodes = soup.find_all("a", href=lambda href: href and href.startswith(f"/{slug}/season-{index + 1}/episode"))
+                seasons.append(
+                    Season(
+                        value,
+                        [Episode(episode.text, f'https://jut.su{episode["href"]}', index + 1) for index, episode in enumerate(season_episodes)]
+                    )
+                )
 
         return seasons
 
