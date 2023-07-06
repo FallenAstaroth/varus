@@ -9,7 +9,7 @@
     <script src="{{ url_for('static', filename='js/lib/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='js/lib/playerjs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/lib/jquery-3.7.0.min.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/room.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </head>
 <body class="room-page">
     <div class="wrapper">
@@ -25,12 +25,6 @@
 <!--                        <a href="/language/ru"><img class="icon" src="../../static/img/svg/flag_ru.svg"></a>-->
 <!--                        <a href="/language/uk_UA"><img class="icon" src="../../static/img/svg/flag_ua.svg"></a>-->
 <!--                    </div>-->
-                    {% if provider["name"] == "jutsu" %}
-                        {% with episodes=provider["data"]["episodes"] %}
-                            {% include "providers/jutsu.html" %}
-                        {% endwith %}
-                        <script type="module" src="{{ url_for('static', filename='js/jutsu.js') }}"></script>
-                    {% endif %}
                 </div>
             </div>
             <div class="chat block">

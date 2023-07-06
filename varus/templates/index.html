@@ -52,9 +52,9 @@
                     <div class="divider-text">{{ _('remains') }}</div>
                 </div>
                 <div class="label-input">
-                    <label class="form-label" for="link">{{ _('Link') }}</label>
-                    <input type="text" class="form-control" placeholder="{{ _('YouTube or file') }}" name="link" id="link" autocomplete="off"/>
-                    {% if data["error"] and data["error"]["type"] == "link" %}
+                    <label class="form-label" for="links">{{ _('Link') }}</label>
+                    <input type="text" class="form-control" placeholder="{{ _('YouTube or file') }}" name="links" id="links" autocomplete="off"/>
+                    {% if data["error"] and data["error"]["type"] == "links" %}
                         <span class="form-error">{{ data["error"]["text"] }}</span>
                     {% endif %}
                 </div>

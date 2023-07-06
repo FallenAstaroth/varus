@@ -1,10 +1,8 @@
 from flask_socketio import join_room, leave_room, emit
 from flask import render_template, request, session, redirect, url_for
 
-from json import dumps
-
-from misc import app, socketio, manager, translator, jutsu
-from varus.config import HOST, PORT, UNSAFE_WERKZEUG, DEBUG
+from config import HOST, PORT, UNSAFE_WERKZEUG, DEBUG
+from misc import app, socketio, manager, translator, youtube, anilibria
 
 
 def send_event(room: str, name: str, color: str, sex: str, icon: str, event: str, emit_type: str, time: int = None) -> None:
@@ -47,7 +45,7 @@ def index():
         name = request.form.get("name")
         color = request.form.get("nick_color")
         sex = request.form.get("sex")
-        link = request.form.get("link")
+        links = request.form.get("links")
         code = request.form.get("code")
 
         data = {
@@ -55,7 +53,7 @@ def index():
             "name": name,
             "sex": sex,
             "color": color,
-            "link": link,
+            "links": links,
             "error": {
                 "type": "",
                 "text": "",
@@ -78,17 +76,23 @@ def index():
 
         if request.form.get("create", False) is not False:
 
-            if link == "":
-                data["error"]["type"] = "link"
-                data["error"]["text"] = translator.get_error("link")
+            if links[0] == "":
+                data["error"]["type"] = "links"
+                data["error"]["text"] = translator.get_error("links")
                 return render_template("index.html", data=data)
+
+            if "anilibria" in links:
+                code = links.split('/')[-1].split('.')[0]
+                videos = anilibria.get_links(code)
+            else:
+                videos = youtube.get_links([links])
 
             room = manager.generate_room_code(4)
             manager.rooms[room] = {
                 "count": 0,
-                "link": link,
+                "links": videos,
                 "last_message_id": 1,
-                "last_video_id": 1
+                "languages": set()
             }
 
         elif code not in manager.rooms:
@@ -97,54 +101,12 @@ def index():
             data["error"]["text"] = translator.get_error("code_not_exist")
             return render_template("index.html", data=data)
 
-        last_video_id = manager.rooms[room]["last_video_id"]
-
-        if "jut.su" in link:
-
-            jutsu.set_headers({"User-Agent": request.headers.get("User-Agent")})
-
-            seasons = jutsu.get_all_seasons(manager.rooms[room]["link"])
-            first_episode = seasons[0].episodes[0]
-            episode_links = jutsu.get_episode(first_episode.href)
-            manager.rooms[room]["provider"] = {
-                "name": "jutsu",
-                "data": {
-                    "episodes": jutsu.format_seasons(seasons)
-                }
-            }
-
-            session.update({
-                "links": dumps([{
-                    "title": first_episode.name,
-                    "file": jutsu.format_links(episode_links),
-                    "id": last_video_id + 1
-                }])
-            })
-
-        else:
-
-            manager.rooms[room]["provider"] = {
-                "name": "youtube",
-                "data": {}
-            }
-
-            session.update({
-                "links": dumps([{
-                    "title": "YouTube",
-                    "file": link,
-                    "id": last_video_id + 1
-                }])
-            })
-
         session.update({
             "room": room,
             "name": name,
             "sex": sex,
             "color": color,
-            "user_agent": request.headers.get("User-Agent")
         })
-
-        manager.rooms[room]["last_video_id"] += 1
 
         return redirect(url_for("room"))
 
@@ -163,12 +125,7 @@ def room():
     if room is None or session.get("name") is None or room not in manager.rooms:
         return redirect(url_for("index"))
 
-    return render_template(
-        "room.html",
-        code=room,
-        links=session.get("links"),
-        provider=manager.rooms[room]["provider"]
-    )
+    return render_template("room.html", code=room, links=manager.rooms[room]["links"])
 
 
 @socketio.on("server_message")
@@ -254,6 +211,7 @@ def connect():
     join_room(room)
 
     count = manager.rooms[room]["count"]
+    # languages = manager.rooms[room]["languages"].add(session.get("language"))
 
     manager.rooms[room].update({
         "last_message": name,
@@ -270,6 +228,8 @@ def connect():
 def disconnect():
     room = session.get("room")
     name = session.get("name")
+
+    # languages = manager.rooms[room]["languages"].remove(session.get("language"))
 
     manager.rooms[room].update({
         "last_message": name,
@@ -293,34 +253,6 @@ def disconnect():
 def chat_clear():
     room = session.get("room")
     manager.rooms[room]["last_event"] = "clear"
-
-
-@socketio.on("server_change_episode")
-def change_episode(data):
-    room = session.get("room")
-    last_id = manager.rooms[room]["last_video_id"] + 1
-
-    users = []
-
-    for key, value in socketio.server.manager.rooms["/"][room].items():
-        jutsu.set_headers({"User-Agent": socketio.server.environ[value]["saved_session"]["user_agent"]})
-        links = jutsu.get_episode(data["link"])
-        users.append({
-            "id": key,
-            "content": {
-                "links": dumps([{
-                    "title": data["name"],
-                    "file": jutsu.format_links(links),
-                    "id": last_id
-                }]),
-                "id": last_id
-            }
-        })
-
-    for user in users:
-        emit("client_change_episode", user["content"], to=user["id"])
-
-    manager.rooms[room]["last_video_id"] = last_id
 
 
 if __name__ == "__main__":

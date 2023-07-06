@@ -41,7 +41,7 @@ class Translator:
         errors = {
             "name": gettext("Enter a name"),
             "code_not_specified": gettext("Enter room code"),
-            "link": gettext("Enter link"),
+            "links": gettext("Enter link"),
             "code_not_exist": gettext("Such a room does not exist")
         }
 
