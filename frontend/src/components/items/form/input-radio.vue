@@ -77,8 +77,10 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
-  .form-check-label {
-    font-size: 0.8375rem;
+  .form-check {
+    .form-check-label {
+      font-size: 0.8375rem;
+    }
   }
 }
 </style>

@@ -32,7 +32,7 @@ export default {
   font-weight: 400;
   line-height: 1.53;
   color: #a3a4cc;
-  background-color: $color-body-background;
+  background-color: $color-block-background;
   background-clip: padding-box;
   border: 1px solid $color-border-default;
   -webkit-appearance: none;
