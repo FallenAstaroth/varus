@@ -22,7 +22,6 @@ export default {
 <style lang="scss">
 @import "@/assets/scss/numbers";
 
-
 .btn-primary {
   color: #fff;
   background-color: #696cff;

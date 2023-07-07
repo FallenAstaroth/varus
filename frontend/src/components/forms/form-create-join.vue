@@ -4,13 +4,16 @@
       <h3 class="form-title">{{ formTitle }}</h3>
     </div>
     <div class="form-inputs">
-      <div class="label-input">
-        <Label id="nick_text" :text="nameTitle"/>
-        <div class="name-inputs">
-          <InputText :placeholder="namePlaceholder" name="name" id="nick_text" value=""/>
-          <InputColor name="nick_color" id="nick_color" value="#c76ad9"/>
-        </div>
-      </div>
+      <InputTextColor
+          text-id="nick_text"
+          text-name="name"
+          text-value=""
+          color-id="nick_color"
+          color-name="nick_color"
+          color-value="#c76ad9"
+          :placeholder="namePlaceholder"
+          :label="nameTitle"
+      />
       <div class="label-input">
         <Label id="" :text="sexTitle"/>
         <div class="sexs">
@@ -20,25 +23,41 @@
         </div>
       </div>
       <Divider :text="dividerCreate"/>
-      <div class="label-input">
-        <Label id="links" :text="linkTitle"/>
-        <InputText :placeholder="linkPlaceholder" name="links" id="links" value=""/>
-      </div>
-      <Button type="submit" name="create" class="btn-create" :text="createButton"/>
+      <InputText
+          id="links"
+          name="links"
+          value=""
+          :placeholder="linkPlaceholder"
+          :label="linkTitle"
+      />
+      <Button
+          type="submit"
+          name="create"
+          class="btn-create"
+          :text="createButton"
+      />
       <Divider :text="dividerJoin"/>
-      <div class="label-input join">
-        <Label id="code" :text="codeTitle"/>
-        <InputText :placeholder="codePlaceholder" name="code" id="code" value=""/>
-      </div>
-      <Button type="submit" name="join" class="btn-join" :text="joinButton"/>
+      <InputText
+          id="code"
+          name="code"
+          value=""
+          :placeholder="codePlaceholder"
+          :label="codeTitle"
+      />
+      <Button
+          type="submit"
+          name="join"
+          class="btn-join"
+          :text="joinButton"
+      />
     </div>
   </form>
 </template>
 
 <script>
 import InputText from "@/components/items/form/input-text";
+import InputTextColor from "@/components/items/form/input-text-color";
 import InputRadio from "@/components/items/form/input-radio";
-import InputColor from "@/components/items/form/input-color";
 import Label from "@/components/items/form/label";
 import Divider from "@/components/items/form/divider";
 import Button from "@/components/items/form/button";
@@ -47,8 +66,8 @@ export default {
   name: "FormComponent",
   components: {
     InputText,
+    InputTextColor,
     InputRadio,
-    InputColor,
     Label,
     Divider,
     Button
@@ -75,20 +94,44 @@ export default {
 }
 </script>
 
-<style lang="css">
-.label-input {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1rem;
-}
+<style lang="scss">
+@import "@/assets/scss/items/form";
 
-.form-title {
-  margin-bottom: 1rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: #cbcbe2;
-  font-size: 1.375rem;
-  text-align: center;
+.rooms.block {
+  overflow-y: auto;
+  max-width: 500px;
+
+  .header h3 {
+    margin-bottom: 0;
+  }
+
+  .form-inputs {
+    margin-top: 1rem;
+  }
+
+  .form-title {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #cbcbe2;
+    font-size: 1.375rem;
+    text-align: center;
+  }
+
+  .name-inputs {
+    display: flex;
+    gap: 10px;
+
+    input[name="name"] {
+      flex: 1;
+    }
+  }
+
+  .btn-create,
+  .btn-join {
+    width: 100%;
+    margin-top: 1rem;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -97,10 +140,6 @@ export default {
     font-size: 1.275rem;
     margin-top: .5rem;
     margin-bottom: 1.5rem;
-  }
-
-  .label-input {
-    margin-top: .5rem;
   }
 }
 </style>

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Form from "@/components/forms/form";
+import Form from "@/components/forms/form-create-join.vue";
 
 export default {
   name: "PageIndexComponent",
@@ -25,6 +25,7 @@ body {
 .wrapper {
   width: 100%;
   max-width: 1920px;
+  margin: 0 auto;
   padding: 20px;
   display: grid;
   place-items: center;
@@ -34,36 +35,5 @@ body {
 
 .index-page {
   height: 100%;
-
-  .rooms.block {
-    overflow-y: auto;
-
-    .header h3 {
-      margin-bottom: 0;
-    }
-
-    .form-inputs {
-      margin-top: 1rem;
-    }
-  }
-
-  form.block {
-    max-width: 500px;
-  }
-
-  .name-inputs {
-    display: flex;
-    gap: 10px;
-
-    input[name="name"] {
-      flex: 1;
-    }
-  }
-
-  .btn-create,
-  .btn-join {
-    width: 100%;
-    margin-top: 1rem;
-  }
 }
 </style>

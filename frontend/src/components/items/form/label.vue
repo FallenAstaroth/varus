@@ -1,8 +1,5 @@
 <template>
-  <label
-      class="form-label"
-      :for="id"
-  >
+  <label class="form-label" :for="id">
     {{ text }}
   </label>
 </template>
