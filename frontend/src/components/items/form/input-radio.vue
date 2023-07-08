@@ -1,24 +1,34 @@
 <template>
-  <div class="form-check form-check-inline">
-    <input
-        type="radio"
-        class="form-check-input"
-        :name="name"
-        :id="id"
-        :value="value"
-    >
-    <label class="form-check-label" :for="id">{{ text }}</label>
+  <div class="label-input">
+    <Label id="" :text="label"/>
+    <div :class="classes">
+      <div class="form-check form-check-inline" v-for="(item, index) in items" :key="index">
+        <input
+            type="radio"
+            class="form-check-input"
+            :name="name"
+            :id="item.id"
+            :value="item.value"
+        >
+        <label class="form-check-label" :for="item.id">{{ item.text }}</label>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Label from "@/components/items/form/label.vue";
+
 export default {
   name: "FormInputRadioComponent",
+  components: {
+    Label
+  },
   props: {
+    classes: String,
     name: String,
-    id: String,
-    value: String,
-    text: String
+    items: Array,
+    label: String
   }
 }
 </script>

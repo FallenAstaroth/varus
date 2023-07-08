@@ -14,14 +14,12 @@
           :placeholder="namePlaceholder"
           :label="nameTitle"
       />
-      <div class="label-input">
-        <Label id="" :text="sexTitle"/>
-        <div class="sexs">
-          <InputRadio name="sex" id="male" value="male" :text="maleTitle"/>
-          <InputRadio name="sex" id="female" value="female" :text="femaleTitle"/>
-          <InputRadio name="sex" id="undefined" value="undefined" :text="undefinedTitle"/>
-        </div>
-      </div>
+      <InputRadio
+          classes="sexes"
+          name="sex"
+          :items="sexItems"
+          :label="sexTitle"
+      />
       <Divider :text="dividerCreate"/>
       <InputText
           id="links"
@@ -58,7 +56,6 @@
 import InputText from "@/components/items/form/input-text";
 import InputTextColor from "@/components/items/form/input-text-color";
 import InputRadio from "@/components/items/form/input-radio";
-import Label from "@/components/items/form/label";
 import Divider from "@/components/items/form/divider";
 import Button from "@/components/items/form/button";
 
@@ -68,7 +65,6 @@ export default {
     InputText,
     InputTextColor,
     InputRadio,
-    Label,
     Divider,
     Button
   },
@@ -78,9 +74,11 @@ export default {
       nameTitle: "Name",
       namePlaceholder: "Johnny Depp",
       sexTitle: "Sex",
-      maleTitle: "Male",
-      femaleTitle: "Female",
-      undefinedTitle: "Who am I?",
+      sexItems: [
+        { id: "male", value: "male", text: "Male" },
+        { id: "female", value: "female", text: "Female" },
+        { id: "undefined", value: "undefined", text: "Who am I?" }
+      ],
       dividerCreate: "remains",
       linkTitle: "Link",
       linkPlaceholder: "YouTube or file",
