@@ -8,6 +8,7 @@
       :name="name"
       :id="id"
       :value="value"
+      :autofocus="focus"
       autocomplete="off"
     />
   </div>
@@ -26,7 +27,8 @@ export default {
     name: String,
     value: String,
     placeholder: String,
-    label: String
+    label: String,
+    focus: Boolean
   }
 }
 </script>

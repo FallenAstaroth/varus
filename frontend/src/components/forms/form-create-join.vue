@@ -13,6 +13,7 @@
           color-value="#c76ad9"
           :placeholder="namePlaceholder"
           :label="nameTitle"
+          focus
       />
       <InputRadio
           classes="sexes"
@@ -75,9 +76,9 @@ export default {
       namePlaceholder: "Johnny Depp",
       sexTitle: "Sex",
       sexItems: [
-        { id: "male", value: "male", text: "Male" },
-        { id: "female", value: "female", text: "Female" },
-        { id: "undefined", value: "undefined", text: "Who am I?" }
+        { id: "male", value: "male", text: "Male", checked: true },
+        { id: "female", value: "female", text: "Female", checked: false },
+        { id: "undefined", value: "undefined", text: "Who am I?", checked: false }
       ],
       dividerCreate: "remains",
       linkTitle: "Link",

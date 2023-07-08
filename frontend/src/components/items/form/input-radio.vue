@@ -9,6 +9,7 @@
             :name="name"
             :id="item.id"
             :value="item.value"
+            :checked="item.checked"
         >
         <label class="form-check-label" :for="item.id">{{ item.text }}</label>
       </div>

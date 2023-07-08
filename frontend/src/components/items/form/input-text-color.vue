@@ -9,6 +9,7 @@
         :name="textName"
         :id="textId"
         :value="textValue"
+        :autofocus="focus"
         autocomplete="off"
       />
       <input
@@ -38,7 +39,8 @@ export default {
     colorId: String,
     colorName: String,
     colorValue: String,
-    label: String
+    label: String,
+    focus: Boolean
   }
 }
 </script>
