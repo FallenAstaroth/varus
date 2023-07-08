@@ -22,6 +22,7 @@
           name="sex"
           :items="sexItems"
           :label="sexTitle"
+          storage="createJoinSex"
       />
       <Divider :text="dividerCreate"/>
       <InputText

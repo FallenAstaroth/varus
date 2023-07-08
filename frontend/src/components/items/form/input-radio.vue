@@ -10,6 +10,7 @@
             :id="item.id"
             :value="item.value"
             :checked="item.checked"
+            v-model="selectedOption"
         >
         <label class="form-check-label" :for="item.id">{{ item.text }}</label>
       </div>
@@ -29,7 +30,22 @@ export default {
     classes: String,
     name: String,
     items: Array,
-    label: String
+    label: String,
+    storage: String
+  },
+  data() {
+    return {
+      selectedOption: null,
+    }
+  },
+  mounted() {
+    const savedOption = localStorage.getItem(this.storage);
+    if (savedOption) this.selectedOption = savedOption;
+  },
+  watch: {
+    selectedOption(value) {
+      localStorage.setItem(this.storage, value);
+    }
   }
 }
 </script>

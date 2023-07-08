@@ -63,7 +63,7 @@ export default {
     updateColor(event) {
       localStorage.setItem(this.colorStorage, event.target.value);
     },
-  },
+  }
 }
 </script>
 
