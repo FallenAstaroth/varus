@@ -4,7 +4,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 
-html, body {
+html, body, .wrapper {
   height: 100%;
 }
 
@@ -18,41 +18,8 @@ h1, h2, h3, h4, h5, h6, p, span {
   margin: 0;
 }
 
-.wrapper {
-  height: 100%;
-}
-
-.block {
-  width: 100%;
-  height: max-content;
-  padding: 20px;
-  background-color: $color-block-background;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
-  box-sizing: border-box;
-
-  .block-title {
-    font-weight: 700;
-    line-height: 1.1;
-    color: #cbcbe2;
-    font-size: 1.2rem;
-  }
-
-  .block-code {
-    font-size: 1rem;
-    background-color: #1e1f2e;
-    padding: 0.5rem 0.7rem;
-    border-radius: $border-radius;
-    margin-left: .2rem;
-  }
-}
-
 @media screen and (max-width: 768px) {
   .wrapper {
     padding: 10px !important;
-  }
-
-  .block {
-    padding: 10px;
   }
 }

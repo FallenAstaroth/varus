@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Form from "@/components/forms/form-create-join.vue";
+import Form from "@/components/forms/form-create-join";
 
 export default {
   name: "PageIndexComponent",
@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 body {
   position: relative;
 }

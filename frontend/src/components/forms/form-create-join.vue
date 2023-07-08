@@ -32,12 +32,9 @@
           :placeholder="linkPlaceholder"
           :label="linkTitle"
       />
-      <Button
-          type="submit"
-          name="create"
-          class="btn-create"
-          :text="createButton"
-      />
+      <button type="submit" name="create" class="btn btn-primary btn-create">
+        {{ createButton }}
+      </button>
       <Divider :text="dividerJoin"/>
       <InputText
           id="code"
@@ -46,12 +43,9 @@
           :placeholder="codePlaceholder"
           :label="codeTitle"
       />
-      <Button
-          type="submit"
-          name="join"
-          class="btn-join"
-          :text="joinButton"
-      />
+      <button type="submit" name="join" class="btn btn-primary btn-join">
+        {{ joinButton }}
+      </button>
     </div>
   </form>
 </template>
@@ -61,7 +55,6 @@ import InputText from "@/components/items/form/input-text";
 import InputTextColor from "@/components/items/form/input-text-color";
 import InputRadio from "@/components/items/form/input-radio";
 import Divider from "@/components/items/form/divider";
-import Button from "@/components/items/form/button";
 
 export default {
   name: "FormComponent",
@@ -69,8 +62,7 @@ export default {
     InputText,
     InputTextColor,
     InputRadio,
-    Divider,
-    Button
+    Divider
   },
   data() {
     return {

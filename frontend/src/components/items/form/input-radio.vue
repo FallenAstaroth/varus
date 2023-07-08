@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Label from "@/components/items/form/label.vue";
+import Label from "@/components/items/form/label";
 
 export default {
   name: "FormInputRadioComponent",
