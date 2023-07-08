@@ -53,8 +53,8 @@ export default {
     }
   },
   created() {
-    this.localTextValue = localStorage.getItem(this.textStorage) || "";
-    this.localColorValue = localStorage.getItem(this.colorStorage) || "#c76ad9";
+    this.localTextValue = localStorage.getItem(this.textStorage) || this.textValue;
+    this.localColorValue = localStorage.getItem(this.colorStorage) || this.colorValue;
   },
   methods: {
     updateText(event) {

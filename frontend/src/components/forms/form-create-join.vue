@@ -78,7 +78,7 @@ export default {
       nameTitle: "Name",
       namePlaceholder: "Johnny Depp",
       nameValue: "",
-      colorValue: "",
+      colorValue: "#c76ad9",
       sexTitle: "Sex",
       sexItems: [
         {id: "male", value: "male", text: "Male", checked: true},
