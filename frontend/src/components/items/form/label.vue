@@ -14,7 +14,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form-label {
   margin-bottom: .5rem;
   font-size: .9rem;

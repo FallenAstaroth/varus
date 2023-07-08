@@ -34,7 +34,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form-check {
   display: block;
   min-height: 1.434375rem;

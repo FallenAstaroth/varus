@@ -7,10 +7,12 @@
       <InputTextColor
           text-id="nick_text"
           text-name="name"
-          text-value=""
+          :text-value="nameValue"
+          text-storage="createJoinUserName"
           color-id="nick_color"
           color-name="nick_color"
-          color-value="#c76ad9"
+          :color-value="colorValue"
+          color-storage="createJoinUserColor"
           :placeholder="namePlaceholder"
           :label="nameTitle"
           focus
@@ -74,11 +76,13 @@ export default {
       formTitle: "Varus TV",
       nameTitle: "Name",
       namePlaceholder: "Johnny Depp",
+      nameValue: "",
+      colorValue: "",
       sexTitle: "Sex",
       sexItems: [
-        { id: "male", value: "male", text: "Male", checked: true },
-        { id: "female", value: "female", text: "Female", checked: false },
-        { id: "undefined", value: "undefined", text: "Who am I?", checked: false }
+        {id: "male", value: "male", text: "Male", checked: true},
+        {id: "female", value: "female", text: "Female", checked: false},
+        {id: "undefined", value: "undefined", text: "Who am I?", checked: false}
       ],
       dividerCreate: "remains",
       linkTitle: "Link",

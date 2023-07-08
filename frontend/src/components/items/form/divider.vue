@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .divider {
   display: block;
   text-align: center;
