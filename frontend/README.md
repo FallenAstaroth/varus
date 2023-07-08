@@ -1,4 +1,4 @@
-# varus
+# Varus
 
 ## Project setup
 ```

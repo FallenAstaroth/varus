@@ -26,9 +26,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/items/block";
-
+<style lang="scss" scoped>
 .player.block {
   .player-frame {
     height: max-content;

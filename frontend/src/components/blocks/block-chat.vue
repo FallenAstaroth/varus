@@ -42,9 +42,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/items/block";
-
+<style lang="scss" scoped>
 .chat.block {
   max-width: 400px;
   height: 100%;
@@ -138,7 +136,7 @@ export default {
           background-color: unset;
           display: flex;
           justify-content: center;
-          align-items: start;
+          align-items: flex-start;
           padding: 5px 0;
 
           .name {

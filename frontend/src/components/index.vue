@@ -17,23 +17,25 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import "@/assets/scss/items/form";
+
 body {
   position: relative;
 }
 
-.wrapper {
-  width: 100%;
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 20px;
-  display: grid;
-  place-items: center;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
 .index-page {
   height: 100%;
+
+  .wrapper {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
 }
 </style>

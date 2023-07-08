@@ -90,9 +90,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import "@/assets/scss/items/form";
-
+<style lang="scss" scoped>
 .rooms.block {
   overflow-y: auto;
   max-width: 500px;
@@ -112,15 +110,6 @@ export default {
     color: #cbcbe2;
     font-size: 1.375rem;
     text-align: center;
-  }
-
-  .name-inputs {
-    display: flex;
-    gap: 10px;
-
-    input[name="name"] {
-      flex: 1;
-    }
   }
 
   .btn-create,

@@ -1,7 +1,7 @@
 <template>
   <div class="label-input">
     <Label :id="textId" :text="label"/>
-    <div class="name-inputs">
+    <div class="text-clor-input">
       <input
         type="text"
         class="form-control"
@@ -77,6 +77,15 @@ export default {
   background: transparent;
   border: 1px solid $color-border-default;
   border-radius: 0.375rem;
+}
+
+.text-clor-input {
+  display: flex;
+  gap: 10px;
+
+  input[type="text"] {
+    flex: 1;
+  }
 }
 
 @media screen and (max-width: 768px) {
