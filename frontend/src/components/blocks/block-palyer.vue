@@ -14,11 +14,14 @@ import playerjsLoader from "@/assets/js/playerjs-loader";
 
 export default {
   name: "BlockPlayerComponent",
-  setup() {
+  props: {
+    videos: String
+  },
+  setup(props) {
     playerjsLoader.then(() => {
       let player = new window.Playerjs({
         id: "player",
-        file: "https://www.youtube.com/watch?v=fUVJPoStDgo"
+        file: props.videos
       });
       console.log(player);
     });

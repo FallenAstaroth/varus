@@ -40,10 +40,14 @@ export default {
   },
   mounted() {
     const savedOption = localStorage.getItem(this.storage);
-    if (savedOption) this.selectedOption = savedOption;
+    if (savedOption) {
+      this.$emit("radioValueUpdated", savedOption);
+      this.selectedOption = savedOption;
+    }
   },
   watch: {
     selectedOption(value) {
+      this.$emit("radioValueUpdated", value);
       localStorage.setItem(this.storage, value);
     }
   }

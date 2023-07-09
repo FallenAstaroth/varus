@@ -10,6 +10,7 @@
       :value="value"
       :autofocus="focus"
       autocomplete="off"
+      @input="updateText"
     />
   </div>
 </template>
@@ -29,6 +30,11 @@ export default {
     placeholder: String,
     label: String,
     focus: Boolean
+  },
+  methods: {
+    updateText(event) {
+      this.$emit("textValueUpdated", event.target.value);
+    }
   }
 }
 </script>

@@ -5,17 +5,19 @@
     </div>
     <div class="form-inputs">
       <InputTextColor
-          text-id="nick_text"
+          text-id="name"
           text-name="name"
           :text-value="nameValue"
           text-storage="createJoinUserName"
-          color-id="nick_color"
-          color-name="nick_color"
+          color-id="color"
+          color-name="color"
           :color-value="colorValue"
           color-storage="createJoinUserColor"
           :placeholder="namePlaceholder"
           :label="nameTitle"
           focus
+          @textValueUpdated="updateName"
+          @colorValueUpdated="updateColor"
       />
       <InputRadio
           classes="sexes"
@@ -23,28 +25,19 @@
           :items="sexItems"
           :label="sexTitle"
           storage="createJoinSex"
+          @radioValueUpdated="updateSex"
       />
       <Divider :text="dividerCreate"/>
       <InputText
-          id="links"
-          name="links"
+          id="link"
+          name="link"
           value=""
           :placeholder="linkPlaceholder"
           :label="linkTitle"
+          @textValueUpdated="updateLink"
       />
-      <button type="submit" name="create" class="btn btn-primary btn-create">
+      <button type="button" name="create" class="btn btn-primary btn-create" @click="sendCreate">
         {{ createButton }}
-      </button>
-      <Divider :text="dividerJoin"/>
-      <InputText
-          id="code"
-          name="code"
-          value=""
-          :placeholder="codePlaceholder"
-          :label="codeTitle"
-      />
-      <button type="submit" name="join" class="btn btn-primary btn-join">
-        {{ joinButton }}
       </button>
     </div>
   </form>
@@ -79,12 +72,54 @@ export default {
       ],
       dividerCreate: "remains",
       linkTitle: "Link",
-      linkPlaceholder: "YouTube or file",
+      linkPlaceholder: "YouTube, Anilibria or file",
       createButton: "Create a room",
       dividerJoin: "or",
       codeTitle: "Room code",
       codePlaceholder: "BONK",
       joinButton: "Join"
+    }
+  },
+  methods: {
+    updateName(value) {
+      this.localTextValue = value;
+    },
+    updateColor(value) {
+      this.localColorValue = value;
+    },
+    updateSex(value) {
+      this.localSexValue = value;
+    },
+    updateLink(value) {
+      this.localLinkValue = value;
+    },
+    sendCreate() {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          {
+            name: this.localTextValue,
+            color: this.localColorValue,
+            sex: this.localSexValue,
+            link: this.localLinkValue
+          }
+        )
+      };
+      fetch("http://127.0.0.1:5000/room/create", requestOptions)
+        .then(response => {
+          if (response.status === 403) {
+            this.$router.push({ name: "Index" });
+            throw new Error("Error");
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.$router.push({ name: "Room", params: { roomId: data.room } });
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 }

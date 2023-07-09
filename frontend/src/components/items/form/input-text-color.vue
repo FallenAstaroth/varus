@@ -54,14 +54,20 @@ export default {
   },
   created() {
     this.localTextValue = localStorage.getItem(this.textStorage) || this.textValue;
+    this.$emit("textValueUpdated", this.localTextValue);
     this.localColorValue = localStorage.getItem(this.colorStorage) || this.colorValue;
+    this.$emit("colorValueUpdated", this.localColorValue);
   },
   methods: {
     updateText(event) {
-      localStorage.setItem(this.textStorage, event.target.value);
+      let value = event.target.value;
+      this.$emit("textValueUpdated", value);
+      localStorage.setItem(this.textStorage, value);
     },
     updateColor(event) {
-      localStorage.setItem(this.colorStorage, event.target.value);
+      let value = event.target.value;
+      this.$emit("colorValueUpdated", value);
+      localStorage.setItem(this.colorStorage, value);
     },
   }
 }
