@@ -1,7 +1,12 @@
 <template>
   <div class="player block">
     <div class="player-frame">
-      <div class="video" id="player" data-links="links"></div>
+      <div
+          class="video"
+          id="player"
+          @play="playEvent"
+      >
+      </div>
     </div>
     <div class="info">
       <h2 class="block-title">Room code: <span class="block-code">code</span></h2>
@@ -11,6 +16,7 @@
 
 <script>
 import playerjsLoader from "@/assets/js/playerjs-loader";
+import { io } from "socket.io-client";
 
 export default {
   name: "BlockPlayerComponent",
@@ -25,6 +31,16 @@ export default {
       });
       console.log(player);
     });
+  },
+  mounted() {
+    this.socket = io("http://127.0.0.1:5000");
+  },
+  methods: {
+    playEvent() {
+      this.socket.emit("connect", () => {
+        this.connected = true;
+      });
+    },
   }
 };
 </script>
