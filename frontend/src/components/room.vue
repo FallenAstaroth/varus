@@ -10,6 +10,8 @@
                 @userplay="playEvent"
                 @userpause="pauseEvent"
                 @line="lineEvent($event)"
+                @fullscreen="fullScreenEvent"
+                @exitfullscreen="fullScreenExitEvent"
             >
             </div>
           </div>
@@ -203,6 +205,22 @@ export default {
     },
     lineEvent(event) {
       socket.emit("server_seek", {time: event.info});
+    },
+    fullScreenEvent() {
+      const chat = document.querySelector(".chat.block");
+      const player = document.querySelector("#oframeplayer");
+      chat.classList.add("overlay");
+      chat.classList.add("active");
+      player.appendChild(chat);
+      this.scrollChatBottom()
+    },
+    fullScreenExitEvent() {
+      const chat = document.querySelector(".chat.block.overlay");
+      const block = document.querySelector(".player-chat");
+      chat.classList.remove("overlay");
+      chat.classList.remove("active");
+      block.appendChild(chat);
+      this.scrollChatBottom()
     },
     sendMessage() {
       if (this.messageValue === "") return;
