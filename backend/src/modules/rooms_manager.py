@@ -1,12 +1,12 @@
 from random import choice
-from string import ascii_lowercase, digits
+from string import ascii_letters, digits
 
 
 class RoomsManager:
 
     def __init__(self):
         self.__rooms = {}
-        self.__symbols = ascii_lowercase + digits
+        self.__symbols = ascii_letters + digits
 
     @property
     def rooms(self):
@@ -31,5 +31,9 @@ class RoomsManager:
         })
         return code
 
-    async def check_room(self, code: str):
+    async def get_room(self, code: str):
         return self.__rooms.get(code, None)
+
+    async def check_room(self, code: str):
+        room = self.__rooms.get(code, None)
+        return True if room else False

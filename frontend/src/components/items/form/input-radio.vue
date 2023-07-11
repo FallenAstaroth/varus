@@ -48,7 +48,6 @@ export default {
   watch: {
     selectedOption(value) {
       this.$emit("radioValueUpdated", value);
-      localStorage.setItem(this.storage, value);
     }
   }
 }

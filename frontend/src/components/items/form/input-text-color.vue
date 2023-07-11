@@ -62,12 +62,10 @@ export default {
     updateText(event) {
       let value = event.target.value;
       this.$emit("textValueUpdated", value);
-      localStorage.setItem(this.textStorage, value);
     },
     updateColor(event) {
       let value = event.target.value;
       this.$emit("colorValueUpdated", value);
-      localStorage.setItem(this.colorStorage, value);
     },
   }
 }

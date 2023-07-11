@@ -1,35 +1,78 @@
-from uvicorn import run
-from fastapi.middleware.cors import CORSMiddleware
+from aiohttp.web import Application
+from aiohttp_cors import setup as setup_cors, ResourceOptions
+from aiohttp_session import setup as setup_session, SimpleCookieStorage
 
-from backend.src.misc import app, socketio_app
-from backend.src.routes import (
-    room as route_room
+from backend.src.views import (
+    room as view_room
 )
 from backend.src.sockets import (
     room as socket_room
 )
-from backend.src.config import BACKEND_HOST, BACKEND_PORT, BACKEND_RELOAD, BACKEND_WORKERS, ORIGINS
+from backend.src.misc import web, app, socketio, APP_HOST, APP_PORT
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ORIGINS,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-)
+def setup_app_sockets(app: Application) -> Application:
+    """
+    Attaches socket module.
+    :return: None
+    """
+    socketio.attach(app)
+    return app
 
 
-async def setup_routes():
-    routes = [route_room]
-    for route in routes:
-        app.include_router(route.router)
+def setup_app_routes(app: Application) -> Application:
+    """
+    Loads all routers.
+    :return: None
+    """
+    views = [view_room]
+
+    for view in views:
+        view.setup(app)
+
+    return app
 
 
-@app.on_event("startup")
-async def on_startup():
-    await setup_routes()
+def setup_app_cors(app: Application) -> Application:
+    """
+    Setups app CORS.
+    :return: None
+    """
+    cors = setup_cors(app, defaults={
+        "*": ResourceOptions(
+            allow_credentials=True,
+            allow_headers="*",
+            allow_methods="*"
+        )
+    })
+
+    for view in [route for route in app.router.routes() if "/socket.io" not in route.resource.canonical]:
+        cors.add(view)
+
+    return app
 
 
-if __name__ == "__main__":
-    run("app:socketio_app", host=BACKEND_HOST, port=BACKEND_PORT, workers=BACKEND_WORKERS, reload=BACKEND_RELOAD)
+def setup_app_cookies(app: Application) -> Application:
+    """
+    Loads the cookies module.
+    :return: None
+    """
+    setup_session(app, SimpleCookieStorage(cookie_name="varus", secure=True, samesite="None", httponly=False))
+    return app
+
+
+def run() -> None:
+    setup_app_cookies(app)
+    setup_app_sockets(app)
+    setup_app_routes(app)
+    setup_app_cors(app)
+
+    web.run_app(
+        app,
+        host=APP_HOST,
+        port=APP_PORT
+    )
+
+
+if __name__ == '__main__':
+    run()

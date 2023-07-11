@@ -1,0 +1,135 @@
+@import "@/assets/scss/colors";
+@import "@/assets/scss/numbers";
+
+
+.chat.block {
+  .chat-box {
+    .messages {
+      .text {
+        color: #a5a5b7;
+        line-height: 1.4;
+        margin-top: 10px;
+        font-size: .9rem;
+
+        &:not(.event):last-child {
+          margin-bottom: 10px;
+        }
+
+        .message-wrapper {
+          padding: 5px 8px;
+          border-radius: $border-radius;
+          background-color: #323249;
+          box-shadow: $box-shadow;
+          width: max-content;
+          max-width: 70%;
+        }
+
+        &.your .message-wrapper {
+            margin-left: auto;
+        }
+
+        &.additional {
+          margin-top: 6px;
+        }
+
+        &.event {
+          width: 100%;
+          max-width: unset;
+          margin-left: auto;
+          margin-right: auto;
+          background-color: unset;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          padding: 5px 0;
+
+          .name {
+            text-align: center;
+          }
+
+          .icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            margin-bottom: 3px;
+            object-fit: contain;
+            vertical-align: middle;
+          }
+
+          .message {
+            text-align: center;
+          }
+        }
+
+        .header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+
+          .name {
+            font-weight: 700;
+          }
+
+          .time {
+            font-size: .75rem;
+            margin-left: 15px;
+            margin-top: 3px;
+          }
+        }
+
+        &.additional .header {
+          display: none;
+        }
+
+        .message {
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
+.chat.block.overlay {
+  .chat-box {
+    .messages {
+      .text {
+        .message-wrapper {
+          background-color: rgba(50, 50, 73, .7);
+        }
+
+        &.event {
+          background-color: unset;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .chat.block {
+    .chat-box {
+      .messages {
+        .text {
+          line-height: 1.2;
+          font-size: .7rem;
+          margin-top: 8px;
+
+          .header {
+            .time {
+              font-size: .65rem;
+              margin-top: 1px;
+            }
+          }
+
+          &.event .icon {
+            height: 13px;
+            width: 13px;
+            margin-top: 0;
+            margin-bottom: 2px;
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+  }
+}

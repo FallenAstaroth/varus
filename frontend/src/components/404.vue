@@ -70,7 +70,6 @@ body {
 
     .btn-home {
       margin: 20px auto;
-      text-decoration: none;
     }
   }
 }

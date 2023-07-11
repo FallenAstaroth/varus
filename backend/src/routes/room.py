@@ -1,74 +1,66 @@
-from fastapi import APIRouter
-from fastapi.responses import Response
+from aiohttp.web import Request, Response
+from aiohttp_session import get_session
 
 from json import dumps
 
 from backend.src.misc import youtube, anilibria, manager
-from backend.src.routes.models import RoomCreateRequest, RoomGetRequest
 
 
-router = APIRouter(
-    prefix="/room",
-    tags=["room"]
-)
+async def create(request: Request) -> Response:
+    """
+    Creates the room.
+    :param request: Request
+    :return: dict
+    """
+    form = await request.json()
 
+    link = form.get("link")
 
-@router.post("/create")
-async def room_create(data: RoomCreateRequest):
-    if not data.name:
-        return Response(
-            status_code=403,
-            content=dumps({
-                "description": "Enter a name",
-                "type": "name"
-            })
-        )
+    if not link:
+        content = dumps({
+            "description": "Enter a link",
+            "type": "link"
+        })
+        return Response(status=403, body=content, content_type="application/json")
 
-    if not data.link:
-        return Response(
-            status_code=403,
-            content=dumps({
-                "description": "Enter a link",
-                "type": "link"
-            })
-        )
-
-    if "anilibria" in data.link:
-        code = data.link.split('/')[-1].split('.')[0]
+    if "anilibria" in link:
+        code = link.split('/')[-1].split('.')[0]
         videos = await anilibria.get_links(code)
     else:
-        videos = await youtube.get_links([data.link])
+        videos = await youtube.get_links([link])
 
     room = await manager.create_room(videos)
 
-    return Response(
-        status_code=200,
-        content=dumps({
-            "room": room,
-            "videos": videos
+    content = dumps({
+        "room": room,
+        "videos": videos
+    })
+
+    return Response(status=200, body=content, content_type="application/json")
+
+
+async def get(request: Request) -> Response:
+    """
+    Returns the room data.
+    :param request: Request
+    :return: dict
+    """
+    form = await request.json()
+
+    code = form.get("code")
+    check = await manager.check_room(code)
+
+    if not code or not check:
+        content = dumps({
+            "description": "Such a room does not exist",
+            "type": "code"
         })
-    )
+        return Response(status=403, body=content, content_type="application/json")
 
+    room = await manager.get_room(code)
 
-@router.post("/get")
-async def room_get(data: RoomGetRequest):
+    content = dumps({
+        "videos": room.get("videos")
+    })
 
-    check = await manager.check_room(data.code)
-
-    if not data.code or not check:
-        return Response(
-            status_code=403,
-            content=dumps({
-                "description": "Such a room does not exist",
-                "type": "code"
-            })
-        )
-
-    room = manager.rooms.get(data.code)
-
-    return Response(
-        status_code=200,
-        content=dumps({
-            "videos": room.get("videos")
-        })
-    )
+    return Response(status=200, body=content, content_type="application/json")

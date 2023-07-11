@@ -1,16 +1,16 @@
 <template>
-  <div class="index-page">
+  <div class="profile-page">
     <div class="wrapper">
-      <Form></Form>
+      <Form/>
     </div>
   </div>
 </template>
 
 <script>
-import Form from "@/components/forms/create";
+import Form from "@/components/forms/profile";
 
 export default {
-  name: "PageIndexComponent",
+  name: "PageSettingsComponent",
   components: {
     Form
   }
@@ -24,7 +24,7 @@ body {
   position: relative;
 }
 
-.index-page {
+.profile-page {
   height: 100%;
 
   .wrapper {

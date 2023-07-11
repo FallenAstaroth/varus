@@ -4,30 +4,6 @@
       <h3 class="form-title">{{ formTitle }}</h3>
     </div>
     <div class="form-inputs">
-      <InputTextColor
-          text-id="name"
-          text-name="name"
-          :text-value="nameValue"
-          text-storage="createJoinUserName"
-          color-id="color"
-          color-name="color"
-          :color-value="colorValue"
-          color-storage="createJoinUserColor"
-          :placeholder="namePlaceholder"
-          :label="nameTitle"
-          focus
-          @textValueUpdated="updateName"
-          @colorValueUpdated="updateColor"
-      />
-      <InputRadio
-          classes="sexes"
-          name="sex"
-          :items="sexItems"
-          :label="sexTitle"
-          storage="createJoinSex"
-          @radioValueUpdated="updateSex"
-      />
-      <Divider :text="dividerCreate"/>
       <InputText
           id="link"
           name="link"
@@ -45,51 +21,21 @@
 
 <script>
 import InputText from "@/components/items/form/input-text";
-import InputTextColor from "@/components/items/form/input-text-color";
-import InputRadio from "@/components/items/form/input-radio";
-import Divider from "@/components/items/form/divider";
 
 export default {
   name: "FormComponent",
   components: {
-    InputText,
-    InputTextColor,
-    InputRadio,
-    Divider
+    InputText
   },
   data() {
     return {
       formTitle: "Varus TV",
-      nameTitle: "Name",
-      namePlaceholder: "Johnny Depp",
-      nameValue: "",
-      colorValue: "#c76ad9",
-      sexTitle: "Sex",
-      sexItems: [
-        {id: "male", value: "male", text: "Male", checked: true},
-        {id: "female", value: "female", text: "Female", checked: false},
-        {id: "undefined", value: "undefined", text: "Who am I?", checked: false}
-      ],
-      dividerCreate: "remains",
       linkTitle: "Link",
       linkPlaceholder: "YouTube, Anilibria or file",
-      createButton: "Create a room",
-      dividerJoin: "or",
-      codeTitle: "Room code",
-      codePlaceholder: "BONK",
-      joinButton: "Join"
+      createButton: "Create a room"
     }
   },
   methods: {
-    updateName(value) {
-      this.localTextValue = value;
-    },
-    updateColor(value) {
-      this.localColorValue = value;
-    },
-    updateSex(value) {
-      this.localSexValue = value;
-    },
     updateLink(value) {
       this.localLinkValue = value;
     },
@@ -99,12 +45,10 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           {
-            name: this.localTextValue,
-            color: this.localColorValue,
-            sex: this.localSexValue,
             link: this.localLinkValue
           }
-        )
+        ),
+        credentials: "include"
       };
       fetch("http://127.0.0.1:5000/room/create", requestOptions)
         .then(response => {
