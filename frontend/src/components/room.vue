@@ -81,6 +81,7 @@ import {colorStorage, nameStorage, sexStorage} from "@/storage";
 import Event from "@/components/items/chat/event.vue";
 import Message from "@/components/items/chat/message.vue";
 import playerjsLoader from "@/assets/js/playerjs-loader";
+import {backendUrl} from "@/globals";
 
 export default {
   name: "PageRoomComponent",
@@ -119,7 +120,7 @@ export default {
         ),
         credentials: "include"
       };
-      fetch("http://127.0.0.1:5000/room/get", requestOptions)
+      fetch(`${backendUrl}/room/get`, requestOptions)
           .then(response => {
             if (response.status === 403) {
               this.$router.push({name: "Index"});
