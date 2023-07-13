@@ -1,5 +1,4 @@
 import {io} from "socket.io-client";
-import {backendUrl} from "@/globals";
 
 
-export const socket = io(backendUrl, { withCredentials: true });
+export const socket = io("http://127.0.0.1:5000", { withCredentials: true });

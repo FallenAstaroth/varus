@@ -2,23 +2,11 @@
   <div class="room-page">
     <div class="wrapper">
       <div class="player-chat">
-        <div class="player block">
-          <div class="player-frame">
-            <div
-                class="video"
-                id="player"
-                @userplay="playEvent"
-                @userpause="pauseEvent"
-                @line="lineEvent($event)"
-                @fullscreen="fullScreenEvent"
-                @exitfullscreen="fullScreenExitEvent"
-            >
-            </div>
-          </div>
-          <div class="info">
-            <h2 class="block-title">Room code: <span class="block-code">code</span></h2>
-          </div>
-        </div>
+        <Player
+            v-if="videosReady"
+            :videos="videos"
+            @newMessage="newMessage"
+        />
         <div class="chat block">
           <div class="top">
             <h2 class="block-title">{{ blockTitle }}</h2>
@@ -78,14 +66,14 @@
 import {useRoute} from "vue-router";
 import {socket} from "@/socket";
 import {colorStorage, nameStorage, sexStorage} from "@/storage";
-import Event from "@/components/items/chat/event.vue";
-import Message from "@/components/items/chat/message.vue";
-import playerjsLoader from "@/assets/js/playerjs-loader";
-import {backendUrl} from "@/globals";
+import Player from "@/components/blocks/player";
+import Event from "@/components/items/chat/event";
+import Message from "@/components/items/chat/message";
 
 export default {
   name: "PageRoomComponent",
   components: {
+    Player,
     Event,
     Message
   },
@@ -96,7 +84,6 @@ export default {
   },
   data() {
     return {
-      player: null,
       videos: "",
       videosReady: false,
       blockTitle: "Room chat",
@@ -105,6 +92,9 @@ export default {
       messages: [],
       messageValue: ""
     }
+  },
+  mounted() {
+    this.getVideos();
   },
   methods: {
     getVideos() {
@@ -120,7 +110,7 @@ export default {
         ),
         credentials: "include"
       };
-      fetch(`${backendUrl}/room/get`, requestOptions)
+      fetch(`${this.$backendUrl}/room/get`, requestOptions)
           .then(response => {
             if (response.status === 403) {
               this.$router.push({name: "Index"});
@@ -131,97 +121,26 @@ export default {
           .then(data => {
             this.videos = data.videos;
             this.videosReady = true;
-            this.initPlayer();
+            this.initChat();
+            this.initJoin();
           })
           .catch(error => {
             console.error(error);
           });
     },
-    initPlayer() {
+    initJoin() {
       const userData = {
         "room": this.$route.params.roomId,
         "name": localStorage.getItem(nameStorage),
         "color": localStorage.getItem(colorStorage),
         "sex": localStorage.getItem(sexStorage)
       }
-
-      playerjsLoader.then(() => {
-        this.player = new window.Playerjs({
-          id: "player",
-          file: this.videos
-        });
-
-        socket.on("client_message", (data) => {
-          this.messages.push(data);
-          this.scrollChatBottom();
-        });
-
-        socket.on("client_play", (data) => {
-          if (Math.abs(data.time - this.player.api("time")) > 1) {
-            this.player.api("seek", data.time);
-          }
-          if (!this.player.api("playing")) {
-            this.player.api("play");
-          }
-          this.messages.push(data);
-          this.scrollChatBottom();
-        });
-
-        socket.on("client_pause", (data) => {
-          if (this.player.api("playing")) {
-            this.player.api("pause");
-          }
-          this.messages.push(data);
-          this.scrollChatBottom();
-        });
-
-        socket.on("client_seek", (data) => {
-          if (Math.abs(data.time - this.player.api("time")) > 1) {
-            this.player.api("seek", data.time);
-          }
-          this.messages.push(data);
-          this.scrollChatBottom();
-        });
-
-        const seekPlus = document.querySelector("#oframeplayer > pjsdiv:nth-child(21) > pjsdiv:nth-child(3)");
-
-        seekPlus.addEventListener("click", () => {
-          socket.emit("server_seek", {time: this.player.api("time") + 15});
-        });
-
-        const seekMinus = document.querySelector("#oframeplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(3)");
-
-        seekMinus.addEventListener("click", () => {
-          socket.emit("server_seek", {time: this.player.api("time") - 15});
-        });
-
-        socket.emit("server_join", userData);
+      socket.emit("server_join", userData);
+    },
+    initChat() {
+      socket.on("client_message", (data) => {
+        this.newMessage(data);
       });
-    },
-    playEvent() {
-      socket.emit("server_play", {time: this.player.api("time")});
-    },
-    pauseEvent() {
-      socket.emit("server_pause");
-    },
-    lineEvent(event) {
-      socket.emit("server_seek", {time: event.info});
-    },
-    fullScreenEvent() {
-      const chat = document.querySelector(".chat.block");
-      const player = document.querySelector("#oframeplayer");
-      chat.classList.add("overlay");
-      chat.classList.add("active");
-      player.appendChild(chat);
-      this.scrollChatBottom()
-    },
-    fullScreenExitEvent() {
-      const chat = document.querySelector(".chat.block.overlay");
-      const block = document.querySelector(".player-chat");
-      chat.classList.remove("overlay");
-      chat.classList.remove("active");
-      block.appendChild(chat);
-      this.scrollChatBottom()
     },
     sendMessage() {
       if (this.messageValue === "") return;
@@ -240,10 +159,11 @@ export default {
     clearChat() {
       this.messages = [];
       socket.emit("chat_clear");
+    },
+    newMessage(data) {
+      this.messages.push(data);
+      this.scrollChatBottom();
     }
-  },
-  mounted() {
-    this.getVideos()
   }
 }
 </script>
@@ -267,24 +187,6 @@ export default {
     display: flex;
     gap: 20px;
     height: 100%;
-  }
-}
-
-.player.block {
-  .player-frame {
-    height: max-content;
-    width: 100%;
-
-    .video {
-      width: 100%;
-    }
-  }
-
-  .info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
   }
 }
 
@@ -426,15 +328,6 @@ export default {
       height: 100%;
       flex-direction: column;
       gap: 10px;
-    }
-  }
-
-  .player.block {
-    padding: 0;
-
-    .info {
-      margin-top: 0;
-      padding: 10px;
     }
   }
 
