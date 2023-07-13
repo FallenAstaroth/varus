@@ -23,7 +23,7 @@ import {socket} from "@/socket";
 import playerjsLoader from "@/assets/js/playerjs-loader";
 
 export default {
-  name: "FormComponent",
+  name: "BlockPlayerComponent",
   props: {
     videos: String
   },
@@ -41,20 +41,14 @@ export default {
       socket.emit("server_seek", {time: event.info});
     },
     fullScreenEvent() {
-      const chat = document.querySelector(".chat.block");
-      const player = document.querySelector("#oframeplayer");
-      chat.classList.add("overlay");
+      const chat = document.querySelector(".chat.block.overlay");
       chat.classList.add("active");
-      player.appendChild(chat);
-      this.scrollChatBottom()
+      this.$emit("chatChanged");
     },
     fullScreenExitEvent() {
       const chat = document.querySelector(".chat.block.overlay");
-      const block = document.querySelector(".player-chat");
-      chat.classList.remove("overlay");
       chat.classList.remove("active");
-      block.appendChild(chat);
-      this.scrollChatBottom()
+      this.$emit("chatChanged");
     },
     initPlayer() {
       playerjsLoader.then(() => {
@@ -97,6 +91,8 @@ export default {
         seekMinus.addEventListener("click", () => {
           socket.emit("server_seek", {time: window.player.api("time") - 15});
         });
+
+        this.$emit("playerCreated");
       });
     },
   }

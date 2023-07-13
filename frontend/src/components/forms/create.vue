@@ -43,24 +43,20 @@ export default {
     sendCreate() {
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          {
-            link: this.localLinkValue
-          }
-        ),
-        credentials: "include"
+        headers: {"Content-Type": "application/json"},
+        credentials: "include",
+        body: JSON.stringify({link: this.localLinkValue})
       };
       fetch(`${backendUrl}/room/create`, requestOptions)
         .then(response => {
           if (response.status === 403) {
-            this.$router.push({ name: "Index" });
+            this.$router.push({name: "Index"});
             throw new Error("Error");
           }
           return response.json();
         })
         .then(data => {
-          this.$router.push({ name: "Room", params: { roomId: data.room } });
+          this.$router.push({name: "Room", params: {roomId: data.room}});
         })
         .catch(error => {
           console.error(error);
