@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import {backendUrl} from "@/globals";
 import InputText from "@/components/items/form/input-text";
 
 export default {
@@ -50,7 +51,7 @@ export default {
         ),
         credentials: "include"
       };
-      fetch(`${this.$backendUrl}/room/create`, requestOptions)
+      fetch(`${backendUrl}/room/create`, requestOptions)
         .then(response => {
           if (response.status === 403) {
             this.$router.push({ name: "Index" });

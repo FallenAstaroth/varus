@@ -65,6 +65,7 @@
 <script>
 import {useRoute} from "vue-router";
 import {socket} from "@/socket";
+import {backendUrl} from "@/globals";
 import {colorStorage, nameStorage, sexStorage} from "@/storage";
 import Player from "@/components/blocks/player";
 import Event from "@/components/items/chat/event";
@@ -110,7 +111,7 @@ export default {
         ),
         credentials: "include"
       };
-      fetch(`${this.$backendUrl}/room/get`, requestOptions)
+      fetch(`${backendUrl}/room/get`, requestOptions)
           .then(response => {
             if (response.status === 403) {
               this.$router.push({name: "Index"});
