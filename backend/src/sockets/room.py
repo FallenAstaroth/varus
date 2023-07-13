@@ -198,3 +198,12 @@ async def disconnect(sid):
         manager.rooms[room]["count"] -= 1
         if manager.rooms[room]["count"] <= 0:
             del manager.rooms[room]
+
+
+@socketio.on("chat_clear")
+async def chat_clear(sid):
+
+    session = await socketio.get_session(sid)
+
+    room = session.get("room")
+    manager.rooms[room].update({"last_event": "clear"})

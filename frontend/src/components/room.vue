@@ -103,7 +103,7 @@ export default {
           chatBox.scrollTop = chatBox.scrollHeight;
         });
       });
-    },
+    }
   }
 }
 </script>

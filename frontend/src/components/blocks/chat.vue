@@ -85,15 +85,9 @@ export default {
       this.messageValue = "";
       this.$refs.message.focus();
     },
-    scrollChatBottom() {
-      const chatBox = document.querySelector(".chat-box");
-      this.$nextTick(() => {
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
-    },
     clearChat() {
-      this.messages = [];
       socket.emit("chat_clear");
+      this.messages.length = 0;
     }
   }
 }
