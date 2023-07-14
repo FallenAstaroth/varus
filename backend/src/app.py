@@ -1,6 +1,5 @@
 from aiohttp.web import Application
 from aiohttp_cors import setup as setup_cors, ResourceOptions
-from aiohttp_session import setup as setup_session, SimpleCookieStorage
 
 from backend.src.views import (
     room as view_room
@@ -52,17 +51,7 @@ def setup_app_cors(app: Application) -> Application:
     return app
 
 
-def setup_app_cookies(app: Application) -> Application:
-    """
-    Loads the cookies module.
-    :return: None
-    """
-    setup_session(app, SimpleCookieStorage(cookie_name="varus", secure=True, samesite="None", httponly=False))
-    return app
-
-
 def run() -> None:
-    setup_app_cookies(app)
     setup_app_sockets(app)
     setup_app_routes(app)
     setup_app_cors(app)
