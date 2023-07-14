@@ -22,7 +22,7 @@ npm run lint
 
 ### Run production version
 ```
-serve -s dist
+serve -s dist -l 5006
 ```
 
 ### Customize configuration
