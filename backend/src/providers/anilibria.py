@@ -1,4 +1,4 @@
-from httpx import AsyncClient
+from aiohttp import ClientSession
 
 from json import dumps
 
@@ -15,17 +15,18 @@ class Anilibria:
         }
 
     @staticmethod
-    async def __request(url: str):
-        async with AsyncClient() as client:
-            result = await client.get(url)
-            return result
+    async def __request(url: str) -> dict:
+        async with ClientSession() as session:
+            async with session.get(url) as response:
+                result = await response.json()
+                return result
 
-    async def get_anime_by_code(self, code: str):
+    async def get_anime_by_code(self, code: str) -> dict:
         result = await self.__request(f"https://api.anilibria.tv/v3/title?code={code}")
-        return result.json()
+        return result
 
     @staticmethod
-    async def __format_links(episodes: list):
+    async def __format_links(episodes: list) -> str:
         return dumps([
             {
                 "title": f'{episode["episode"]} episode',
@@ -34,7 +35,7 @@ class Anilibria:
             for episode in episodes]
         )
 
-    async def __extract_m3u8_links(self, data: dict):
+    async def __extract_m3u8_links(self, data: dict) -> list:
         parsed_data = data["player"]
         result = []
 
@@ -55,7 +56,7 @@ class Anilibria:
 
         return result
 
-    async def get_links(self, code: str):
+    async def get_links(self, code: str) -> str:
         anime = await self.get_anime_by_code(code)
         episodes = await self.__extract_m3u8_links(anime)
         result = await self.__format_links(episodes)

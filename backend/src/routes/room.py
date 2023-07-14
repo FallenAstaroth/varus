@@ -1,5 +1,4 @@
 from aiohttp.web import Request, Response
-from aiohttp_session import get_session
 
 from json import dumps
 
