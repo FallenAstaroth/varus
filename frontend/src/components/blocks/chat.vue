@@ -147,7 +147,7 @@ export default {
       background-color: rgba(68, 69, 100, 0);
     }
 
-    &::-webkit-scrollbar-thumb {
+    &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(68, 69, 100, 1);
     }
 

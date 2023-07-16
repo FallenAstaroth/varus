@@ -24,18 +24,27 @@ async def create(request: Request) -> Response:
 
     if "anilibria" in link:
         code = link.split('/')[-1].split('.')[0]
-        videos = await anilibria.get_links(code)
+        videos, skips = await anilibria.get_links(code)
     else:
         videos = await youtube.get_links([link])
+        skips = None
 
     room = await manager.create_room(videos)
 
-    content = dumps({
+    content = {
         "room": room,
         "videos": videos
-    })
+    }
 
-    return Response(status=200, body=content, content_type="application/json")
+    if skips:
+        manager.rooms[room].update({
+            "skips": skips
+        })
+        content.update({
+            "skips": skips
+        })
+
+    return Response(status=200, body=dumps(content), content_type="application/json")
 
 
 async def get(request: Request) -> Response:
@@ -59,7 +68,8 @@ async def get(request: Request) -> Response:
     room = await manager.get_room(code)
 
     content = dumps({
-        "videos": room.get("videos")
+        "videos": room.get("videos"),
+        "skips": room.get("skips")
     })
 
     return Response(status=200, body=content, content_type="application/json")

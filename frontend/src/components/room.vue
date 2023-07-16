@@ -5,6 +5,7 @@
         <Player
             v-if="videosReady"
             :videos="videos"
+            :skips="skips"
             @newMessage="newMessage"
             @chatChanged="scrollChatsBottom"
             @playerCreated="playerCreated"
@@ -32,7 +33,8 @@ export default {
   },
   data() {
     return {
-      videos: "",
+      videos: null,
+      skips: null,
       videosReady: false,
       messages: []
     }
@@ -42,7 +44,7 @@ export default {
   },
   provide() {
     return {
-      messages: this.messages
+      messages: this.messages,
     };
   },
   methods: {
@@ -65,6 +67,7 @@ export default {
         })
         .then(data => {
           this.videos = data.videos;
+          this.skips = data.skips;
           this.videosReady = true;
           this.initChat();
           this.initJoin();

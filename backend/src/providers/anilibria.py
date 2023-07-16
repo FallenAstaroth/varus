@@ -27,19 +27,40 @@ class Anilibria:
 
     @staticmethod
     async def __format_links(episodes: list) -> str:
-        return dumps([
-            {
+        result = []
+        for episode in episodes:
+            data = {}
+            data.update({
                 "title": f'{episode["episode"]} episode',
-                "file": ",".join([f'[{video["quality"]}p]{video["link"]}' for video in episode["links"]])
-            }
-            for episode in episodes]
-        )
+                "file": ",".join([f'[{video["quality"]}p]{video["link"]}' for video in episode["links"]]),
+                "id": episode["id"]
+            })
+            if len(episode["opening"]) == 2:
+                data.update({
+                    "outside": [{"id": "skip-opening", "from": episode["opening"][0], "to": episode["opening"][1]},
+                                {"id": "skip-opening-overlay", "from": episode["opening"][0],
+                                 "to": episode["opening"][1]}]
+                })
+            result.append(data)
+
+        return dumps(result)
+
+    @staticmethod
+    async def __get_skips(episodes: list) -> dict:
+        result = {}
+
+        for episode in episodes:
+            result.update({
+                episode["id"]: episode["opening"]
+            })
+
+        return result
 
     async def __extract_m3u8_links(self, data: dict) -> list:
         parsed_data = data["player"]
         result = []
 
-        for item in parsed_data["list"].values():
+        for index, item in enumerate(parsed_data["list"].values()):
             links = []
 
             for quality, link in item["hls"].items():
@@ -52,12 +73,13 @@ class Anilibria:
 
                 links.append({"quality": quality, "link": link})
 
-            result.append({"episode": item["episode"], "links": links})
+            result.append({"id": index, "episode": item["episode"], "links": links, "opening": item.get("skips", {}).get("opening")})
 
         return result
 
-    async def get_links(self, code: str) -> str:
+    async def get_links(self, code: str) -> tuple:
         anime = await self.get_anime_by_code(code)
         episodes = await self.__extract_m3u8_links(anime)
-        result = await self.__format_links(episodes)
-        return result
+        links = await self.__format_links(episodes)
+        skips = await self.__get_skips(episodes)
+        return links, skips

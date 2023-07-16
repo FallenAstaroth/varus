@@ -27,6 +27,11 @@ class Translator:
                 "male": "rewound the player (male)",
                 "female": "rewound the player (female)",
                 "undefined": "rewound the player (undefined)"
+            },
+            "skip": {
+                "male": "skipped the opening (male)",
+                "female": "skipped the opening (female)",
+                "undefined": "skipped the opening (undefined)"
             }
         }
 

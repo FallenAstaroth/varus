@@ -117,6 +117,34 @@ async def server_seek(sid, data):
     await socketio.emit("client_seek", content, room=room)
 
 
+@socketio.on("server_skip_opening")
+async def server_skip_opening(sid, data):
+
+    session = await socketio.get_session(sid)
+
+    room = session.get("room")
+    name = session.get("name")
+    color = session.get("color")
+    sex = session.get("sex")
+    episode = data.get("id")
+
+    manager.rooms[room].update({
+        "last_message": name,
+        "last_event": "skip_opening",
+    })
+
+    content = {
+        "name": name,
+        "color": color,
+        "message": translator.get_event("skip", sex),
+        "id": episode,
+        "icon": "seek",
+        "type": "event"
+    }
+
+    await socketio.emit("client_skip_opening", content, room=room)
+
+
 @socketio.on("server_join")
 async def server_join(sid, data):
 

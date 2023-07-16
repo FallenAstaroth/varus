@@ -17,14 +17,6 @@
     color: #cbcbe2;
     font-size: 1.2rem;
   }
-
-  .block-code {
-    font-size: 1rem;
-    background-color: #1e1f2e;
-    padding: 0.5rem 0.7rem;
-    border-radius: $border-radius;
-    margin-left: .2rem;
-  }
 }
 
 @media screen and (max-width: 768px) {
@@ -34,10 +26,6 @@
     .block-title {
       font-size: .9rem;
       margin-top: 0;
-    }
-
-    .block-code {
-      font-size: .7rem;
     }
   }
 }
