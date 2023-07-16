@@ -32,6 +32,11 @@ class Translator:
                 "male": "skipped the opening (male)",
                 "female": "skipped the opening (female)",
                 "undefined": "skipped the opening (undefined)"
+            },
+            "switch": {
+                "male": "switched the episode (male)",
+                "female": "switched the episode (female)",
+                "undefined": "switched the episode (undefined)"
             }
         }
 

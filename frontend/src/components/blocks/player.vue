@@ -9,6 +9,7 @@
           @line="lineEvent($event)"
           @fullscreen="fullScreenEvent"
           @exitfullscreen="fullScreenExitEvent"
+          @new="changeEpisodeEvent"
       >
       </div>
     </div>
@@ -56,6 +57,9 @@ export default {
     },
     skipOpening() {
       socket.emit("server_skip_opening", {id: window.player.api("playlist_id")});
+    },
+    changeEpisodeEvent() {
+      socket.emit("server_change_episode", {id: window.player.api("playlist_id")});
     },
     fullScreenEvent() {
       const chat = document.querySelector(".chat.block.overlay");
@@ -131,6 +135,17 @@ export default {
           if (Math.abs(range[1] - window.player.api("time")) > 1) {
             window.player.api("seek", range[1]);
           }
+          this.$emit("newMessage", data);
+        });
+
+        socket.on("client_change_episode", (data) => {
+          if (window.player.api("playlist_id") !== data.id) {
+            window.player.api("find", data.id);
+          }
+          if (!window.player.api("playing")) {
+            window.player.api("play");
+          }
+          this.getVideoTitle();
           this.$emit("newMessage", data);
         });
 

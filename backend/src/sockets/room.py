@@ -145,6 +145,34 @@ async def server_skip_opening(sid, data):
     await socketio.emit("client_skip_opening", content, room=room)
 
 
+@socketio.on("server_change_episode")
+async def server_change_episode(sid, data):
+
+    session = await socketio.get_session(sid)
+
+    room = session.get("room")
+    name = session.get("name")
+    color = session.get("color")
+    sex = session.get("sex")
+    episode = data.get("id")
+
+    manager.rooms[room].update({
+        "last_message": name,
+        "last_event": "change_episode",
+    })
+
+    content = {
+        "name": name,
+        "color": color,
+        "message": translator.get_event("switch", sex),
+        "id": episode,
+        "icon": "switch",
+        "type": "event"
+    }
+
+    await socketio.emit("client_change_episode", content, room=room)
+
+
 @socketio.on("server_join")
 async def server_join(sid, data):
 
