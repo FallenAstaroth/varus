@@ -2,6 +2,8 @@ from aiohttp import ClientSession
 
 from json import dumps
 
+from backend.src.helpers import Episode, Link
+
 
 class Anilibria:
 
@@ -31,15 +33,24 @@ class Anilibria:
         for episode in episodes:
             data = {}
             data.update({
-                "title": f'{episode["episode"]} episode',
-                "file": ",".join([f'[{video["quality"]}p]{video["link"]}' for video in episode["links"]]),
-                "id": episode["id"]
+                "title": f'{episode.name} episode',
+                "file": ",".join([f'[{video.quality}p]{video.link}' for video in episode.links]),
+                "id": episode.id
             })
-            if len(episode["opening"]) == 2:
+            if len(episode.opening) == 2:
                 data.update({
-                    "outside": [{"id": "skip-opening", "from": episode["opening"][0], "to": episode["opening"][1]},
-                                {"id": "skip-opening-overlay", "from": episode["opening"][0],
-                                 "to": episode["opening"][1]}]
+                    "outside": [
+                        {
+                            "id": "skip-opening",
+                            "from": episode.opening[0],
+                            "to": episode.opening[1]
+                        },
+                        {
+                            "id": "skip-opening-overlay",
+                            "from": episode.opening[0],
+                            "to": episode.opening[1]
+                        }
+                    ]
                 })
             result.append(data)
 
@@ -51,7 +62,7 @@ class Anilibria:
 
         for episode in episodes:
             result.update({
-                episode["id"]: episode["opening"]
+                episode.id: episode.opening
             })
 
         return result
@@ -71,9 +82,9 @@ class Anilibria:
                 quality = self.__qualities.get(quality)
                 link = f"{self.__video_domen}{link}"
 
-                links.append({"quality": quality, "link": link})
+                links.append(Link(quality, link))
 
-            result.append({"id": index, "episode": item["episode"], "links": links, "opening": item.get("skips", {}).get("opening")})
+            result.append(Episode(index, item["episode"], links, item.get("skips", {}).get("opening")))
 
         return result
 
