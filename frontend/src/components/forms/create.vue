@@ -1,7 +1,12 @@
 <template>
   <form method="post" class="rooms block">
     <div class="header">
-      <h3 class="form-title">{{ formTitle }}</h3>
+      <h3 class="form-title">
+        <div class="logo">
+          <img src="@/assets/img/svg/logo.svg" alt=""/>
+        </div>
+        {{ formTitle }}
+      </h3>
     </div>
     <div class="form-inputs">
       <InputText
@@ -30,7 +35,7 @@ export default {
   },
   data() {
     return {
-      formTitle: "Varus TV",
+      formTitle: "arus",
       linkTitle: "Link",
       linkPlaceholder: "YouTube, Anilibria or file",
       createButton: "Create a room"
@@ -86,6 +91,22 @@ export default {
     color: #cbcbe2;
     font-size: 1.375rem;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .logo {
+      width: 100%;
+      max-width: 30px;
+      height: 100%;
+      max-height: 30px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
   }
 
   .btn-create,
