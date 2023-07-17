@@ -117,11 +117,17 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
-  .form-title {
-    line-height: 1;
-    font-size: 1.275rem;
-    margin-top: .5rem;
-    margin-bottom: 1.5rem;
+  .rooms.block {
+    .form-title {
+      line-height: 1;
+      font-size: 1.175rem;
+      margin-bottom: 0;
+
+      .logo {
+        max-width: 25px;
+        max-height: 25px;
+      }
+    }
   }
 }
 </style>
