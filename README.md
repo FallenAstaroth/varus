@@ -4,7 +4,7 @@
 
 ## 🗺️ Navigation
 * [Current features](#-current-features)
-* [Deployment](#Deployment)
+* [Deployment](#%EF%B8%8F-deployment)
   * [Backend](#-backend)
   * [Frontend](#-frontend)
 
