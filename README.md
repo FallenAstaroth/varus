@@ -3,7 +3,7 @@
 </p>
 
 ## 🗺️ Navigation
-* [Current features](#-Сurrent-features)
+* [Current features](#-current-features)
 * [Deployment](#%EF%B8%8F-Deployment)
   * [Backend](#-Backend)
   * [Frontend](#-Frontend)
