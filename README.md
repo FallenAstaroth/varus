@@ -3,10 +3,10 @@
 </p>
 
 ## 🗺️ Navigation
-* [Current features](#📄-Сurrent-features)
-* [Deployment](#🛠️-Deployment)
-  * [Backend](#⚙️-Backend)
-  * [Frontend](#👁️-Frontend)
+* [Current features](#-Сurrent-features)
+* [Deployment](#-Deployment)
+  * [Backend](#-Backend)
+  * [Frontend](#-Frontend)
 
 ### 📄 Current features
 1. Sites that the player supports:
