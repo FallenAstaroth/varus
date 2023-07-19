@@ -4,9 +4,9 @@
 
 ## 🗺️ Navigation
 * [Current features](#-current-features)
-* [Deployment](#%EF%B8%8F-Deployment)
-  * [Backend](#-Backend)
-  * [Frontend](#-Frontend)
+* [Deployment](#-deployment)
+  * [Backend](#-backend)
+  * [Frontend](#-frontend)
 
 ### 📄 Current features
 1. Sites that the player supports:
