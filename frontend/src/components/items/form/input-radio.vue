@@ -12,7 +12,8 @@
             :checked="item.checked"
             v-model="selectedOption"
         >
-        <label class="form-check-label" :for="item.id">{{ $t(item.text) }}</label>
+        <label class="form-check-label" v-if="item.text" :for="item.id">{{ $t(item.text) }}</label>
+        <label class="form-check-label" v-if="item.icon" :for="item.id"><img class="icon" :src="require(`@/assets/img/svg/${item.icon}.svg`)" alt=""></label>
       </div>
     </div>
   </div>
@@ -98,6 +99,10 @@ export default {
     color: #cbcbe2;
     font-size: 0.9375rem;
     cursor: pointer;
+
+    .icon {
+      width: 30px;
+    }
   }
 }
 

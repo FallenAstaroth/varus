@@ -4,6 +4,14 @@
       <h3 class="form-title">{{ $t("Profile") }}</h3>
     </div>
     <div class="form-inputs">
+      <InputRadio
+          classes="languages"
+          name="language"
+          :items="languageItems"
+          :label='$t("Language")'
+          :storage="languageStorage"
+          @radioValueUpdated="updateLanguage"
+      />
       <InputTextColor
           text-id="name"
           text-name="name"
@@ -27,14 +35,6 @@
           :storage="sexStorage"
           @radioValueUpdated="updateSex"
       />
-      <InputRadio
-          classes="languages"
-          name="language"
-          :items="languageItems"
-          :label='$t("Language")'
-          :storage="languageStorage"
-          @radioValueUpdated="updateLanguage"
-      />
       <button type="button" name="save" class="btn btn-primary btn-save" @click="saveProfile">
         {{ $t("Save") }}
       </button>
@@ -52,7 +52,7 @@
 import InputTextColor from "@/components/items/form/input-text-color";
 import InputRadio from "@/components/items/form/input-radio";
 import Divider from "@/components/items/form/divider";
-import { nameStorage, colorStorage, sexStorage, languageStorage } from "@/storage";
+import {nameStorage, colorStorage, sexStorage, languageStorage} from "@/storage";
 
 export default {
   name: "FormComponent",
@@ -71,9 +71,9 @@ export default {
         {id: "undefined", value: "undefined", text: "Who am I?", checked: false}
       ],
       languageItems: [
-        {id: "en", value: "en", text: "English", checked: true},
-        {id: "ru", value: "ru", text: "Russian", checked: false},
-        {id: "ua", value: "ua", text: "Ukrainian", checked: false},
+        {id: "en", value: "en", icon: "flag_en", checked: true},
+        {id: "ru", value: "ru", icon: "flag_ru", checked: false},
+        {id: "ua", value: "ua", icon: "flag_ua", checked: false},
       ],
       nameStorage: nameStorage,
       colorStorage: colorStorage,
@@ -103,9 +103,9 @@ export default {
 
       let room = this.$route.query.room;
       if (room) {
-        this.$router.push({ name: "Room", params: { roomId: room } });
+        this.$router.push({name: "Room", params: {roomId: room}});
       } else {
-        this.$router.push({ name: "Index" });
+        this.$router.push({name: "Index"});
       }
     }
   }
