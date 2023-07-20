@@ -1,7 +1,7 @@
 <template>
   <form method="post" class="profile block">
     <div class="header">
-      <h3 class="form-title">{{ formTitle }}</h3>
+      <h3 class="form-title">{{ $t("Profile") }}</h3>
     </div>
     <div class="form-inputs">
       <InputTextColor
@@ -13,8 +13,8 @@
           color-name="color"
           :color-value="colorValue"
           :color-storage="colorStorage"
-          :placeholder="namePlaceholder"
-          :label="nameTitle"
+          :placeholder='$t("Johnny Depp")'
+          :label='$t("Name")'
           focus
           @textValueUpdated="updateName"
           @colorValueUpdated="updateColor"
@@ -23,17 +23,25 @@
           classes="sexes"
           name="sex"
           :items="sexItems"
-          :label="sexTitle"
+          :label='$t("Sex")'
           :storage="sexStorage"
           @radioValueUpdated="updateSex"
       />
+      <InputRadio
+          classes="languages"
+          name="language"
+          :items="languageItems"
+          :label='$t("Language")'
+          :storage="languageStorage"
+          @radioValueUpdated="updateLanguage"
+      />
       <button type="button" name="save" class="btn btn-primary btn-save" @click="saveProfile">
-        {{ saveButton }}
+        {{ $t("Save") }}
       </button>
       <div class="home" v-if="$route.query.firstLogin !== 'true'">
-        <Divider :text="dividerHome"/>
+        <Divider :text='$t("or")'/>
         <a href="/" class="btn btn-primary btn-home">
-          {{ homeButton }}
+          {{ $t("Home") }}
         </a>
       </div>
     </div>
@@ -44,7 +52,7 @@
 import InputTextColor from "@/components/items/form/input-text-color";
 import InputRadio from "@/components/items/form/input-radio";
 import Divider from "@/components/items/form/divider";
-import { nameStorage, colorStorage, sexStorage } from "@/storage";
+import { nameStorage, colorStorage, sexStorage, languageStorage } from "@/storage";
 
 export default {
   name: "FormComponent",
@@ -55,23 +63,22 @@ export default {
   },
   data() {
     return {
-      formTitle: "Profile",
-      nameTitle: "Name",
-      namePlaceholder: "Johnny Depp",
       nameValue: "",
       colorValue: "#c76ad9",
-      sexTitle: "Sex",
       sexItems: [
         {id: "male", value: "male", text: "Male", checked: true},
         {id: "female", value: "female", text: "Female", checked: false},
         {id: "undefined", value: "undefined", text: "Who am I?", checked: false}
       ],
-      saveButton: "Save",
-      dividerHome: "or",
-      homeButton: "Home",
+      languageItems: [
+        {id: "en", value: "en", text: "English", checked: true},
+        {id: "ru", value: "ru", text: "Russian", checked: false},
+        {id: "ua", value: "ua", text: "Ukrainian", checked: false},
+      ],
       nameStorage: nameStorage,
       colorStorage: colorStorage,
-      sexStorage: sexStorage
+      sexStorage: sexStorage,
+      languageStorage: languageStorage
     }
   },
   methods: {
@@ -84,10 +91,15 @@ export default {
     updateSex(value) {
       this.localSexValue = value;
     },
+    updateLanguage(value) {
+      this.localLanguageValue = value;
+    },
     saveProfile() {
       localStorage.setItem(this.nameStorage, this.localNameValue);
       localStorage.setItem(this.colorStorage, this.localColorValue);
       localStorage.setItem(this.sexStorage, this.localSexValue);
+      localStorage.setItem(this.languageStorage, this.localLanguageValue);
+      this.$i18n.locale = this.localLanguageValue;
 
       let room = this.$route.query.room;
       if (room) {

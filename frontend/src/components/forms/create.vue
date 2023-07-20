@@ -13,12 +13,12 @@
           id="link"
           name="link"
           value=""
-          :placeholder="linkPlaceholder"
-          :label="linkTitle"
+          :placeholder='$t("YouTube, Anilibria or file")'
+          :label='$t("Link")'
           @textValueUpdated="updateLink"
       />
       <button type="button" name="create" class="btn btn-primary btn-create" @click="sendCreate">
-        {{ createButton }}
+        {{ $t("Create a room") }}
       </button>
     </div>
   </form>
@@ -35,10 +35,7 @@ export default {
   },
   data() {
     return {
-      formTitle: "arus",
-      linkTitle: "Link",
-      linkPlaceholder: "YouTube, Anilibria or file",
-      createButton: "Create a room"
+      formTitle: "arus"
     }
   },
   methods: {

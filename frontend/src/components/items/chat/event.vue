@@ -2,7 +2,7 @@
   <div class="text event">
     <p class="message">
         <span class="name" :style="{ color: color }"><img class="icon" :src="require(`@/assets/img/svg/${icon}.svg`)" alt="">{{ name }}</span>
-        {{ message }}
+        {{ $t(message) }}
     </p>
   </div>
 </template>

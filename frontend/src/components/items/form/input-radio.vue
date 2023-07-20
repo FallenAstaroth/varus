@@ -12,7 +12,7 @@
             :checked="item.checked"
             v-model="selectedOption"
         >
-        <label class="form-check-label" :for="item.id">{{ item.text }}</label>
+        <label class="form-check-label" :for="item.id">{{ $t(item.text) }}</label>
       </div>
     </div>
   </div>

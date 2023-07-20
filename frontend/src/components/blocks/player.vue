@@ -14,13 +14,13 @@
       </div>
     </div>
     <div class="info">
-      <h2 class="block-title">{{ title }}</h2>
+      <h2 class="block-title">{{ $t("{0} episode", [title]) }}</h2>
       <div class="actions">
         <button class="btn btn-primary skip" id="skip-opening" @click="skipOpening">
-          Skip
+          {{ $t("Skip") }}
         </button>
         <button class="btn btn-primary skip overlay hidden" id="skip-opening-overlay" @click="skipOpening">
-          Skip opening
+          {{ $t("Skip opening") }}
         </button>
       </div>
     </div>
@@ -78,9 +78,9 @@ export default {
     getVideoTitle() {
       const title = window.player.api("title");
       if (title) {
-        this.title = window.player.api("title");
+        this.title = title.split(" ")[0];
       } else {
-        this.title = window.player.api("playlist_title");
+        this.title = window.player.api("playlist_title").split(" ")[0];
       }
     },
     addOverlaySkip() {

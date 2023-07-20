@@ -5,8 +5,8 @@
         <div class="image">
           <img src="@/assets/img/404.png" alt="">
         </div>
-        <p>{{ error }}</p>
-        <a href="/" class="btn btn-primary btn-home">{{ button }}</a>
+        <p>{{ $t("Looks like you're lost") }}</p>
+        <a href="/" class="btn btn-primary btn-home">{{ $t("Back to Home") }}</a>
       </div>
     </div>
   </div>
@@ -14,13 +14,7 @@
 
 <script>
 export default {
-  name: "Page404Component",
-  data() {
-    return {
-      error: "Looks like you're lost",
-      button: "Back to Home"
-    }
-  }
+  name: "Page404Component"
 }
 </script>
 

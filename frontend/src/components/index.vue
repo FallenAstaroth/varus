@@ -1,7 +1,7 @@
 <template>
   <div class="index-page">
     <div class="wrapper">
-      <Form></Form>
+      <Form/>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="chat block">
     <div class="top">
-      <h2 class="block-title">{{ blockTitle }}</h2>
+      <h2 class="block-title">{{ $t("Room chat") }}</h2>
       <button class="btn btn-primary chat-clear" @click="clearChat">
         <img class="icon" src="@/assets/img/svg/trash.svg" alt=""/>
       </button>
@@ -29,7 +29,7 @@
       </div>
       <div class="actions">
         <div class="actions-wrapper">
-          <span>{{ actionsReply }}</span>
+          <span>{{ $t("Reply") }}</span>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
       <input
           type="text"
           class="form-control message-input"
-          :placeholder="inputsMessagePlaceholder"
+          :placeholder='$t("Message")'
           name="message"
           autocomplete="off"
           v-model="messageValue"
@@ -65,9 +65,6 @@ export default {
   inject: ["messages"],
   data() {
     return {
-      blockTitle: "Room chat",
-      actionsReply: "Reply",
-      inputsMessagePlaceholder: "Message",
       messageValue: ""
     }
   },
