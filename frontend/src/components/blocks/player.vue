@@ -6,10 +6,10 @@
           id="player"
           @userplay="playEvent"
           @userpause="pauseEvent"
-          @line="lineEvent($event)"
+          @userseek="seekEvent"
+          @usernew="changeEpisodeEvent"
           @fullscreen="fullScreenEvent"
           @exitfullscreen="fullScreenExitEvent"
-          @new="changeEpisodeEvent"
       >
       </div>
     </div>
@@ -52,8 +52,8 @@ export default {
     pauseEvent() {
       socket.emit("server_pause");
     },
-    lineEvent(event) {
-      socket.emit("server_seek", {time: event.info});
+    seekEvent() {
+      socket.emit("server_seek", {time: window.player.api("time")});
     },
     skipOpening() {
       socket.emit("server_skip_opening", {id: window.player.api("playlist_id")});
@@ -95,9 +95,6 @@ export default {
           file: this.videos
         });
 
-        const seekPlus = document.querySelector("#oframeplayer > pjsdiv:nth-child(21) > pjsdiv:nth-child(3)");
-        const seekMinus = document.querySelector("#oframeplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(3)");
-
         socket.on("client_play", (data) => {
           if (Math.abs(data.time - window.player.api("time")) > 1) {
             window.player.api("seek", data.time);
@@ -120,14 +117,6 @@ export default {
             window.player.api("seek", data.time);
           }
           this.$emit("newMessage", data);
-        });
-
-        seekPlus.addEventListener("click", () => {
-          socket.emit("server_seek", {time: window.player.api("time") + 15});
-        });
-
-        seekMinus.addEventListener("click", () => {
-          socket.emit("server_seek", {time: window.player.api("time") - 15});
         });
 
         socket.on("client_skip_opening", (data) => {
