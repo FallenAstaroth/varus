@@ -6,7 +6,7 @@
           id="player"
           @userplay="playEvent"
           @userpause="pauseEvent"
-          @userseek="seekEvent"
+          @userseek="seekEvent($event)"
           @usernew="changeEpisodeEvent"
           @fullscreen="fullScreenEvent"
           @exitfullscreen="fullScreenExitEvent"
@@ -52,8 +52,14 @@ export default {
     pauseEvent() {
       socket.emit("server_pause");
     },
-    seekEvent() {
-      socket.emit("server_seek", {time: window.player.api("time")});
+    seekEvent(event) {
+      let time;
+      if (typeof event.info === "string") {
+        time = window.player.api("time") + parseInt(event.info);
+      } else {
+        time = event.info;
+      }
+      socket.emit("server_seek", {time: time});
     },
     skipOpening() {
       socket.emit("server_skip_opening", {id: window.player.api("playlist_id")});

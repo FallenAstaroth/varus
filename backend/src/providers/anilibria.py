@@ -35,7 +35,7 @@ class Anilibria:
             data.update({
                 "title": f'{episode.name} episode',
                 "file": ",".join([f'[{video.quality}p]{video.link}' for video in episode.links]),
-                "id": episode.id
+                "id": f"id-{episode.id}"
             })
             if len(episode.opening) == 2:
                 data.update({
@@ -62,7 +62,7 @@ class Anilibria:
 
         for episode in episodes:
             result.update({
-                episode.id: episode.opening
+                f"id-{episode.id}": episode.opening
             })
 
         return result
