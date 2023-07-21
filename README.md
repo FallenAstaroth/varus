@@ -43,7 +43,7 @@ call venv\Scripts\activate
 ```
 Linux:
 ```
-source venv\bin\activate
+source venv/bin/activate
 ```
 6. Install dependencies:
 ```
@@ -58,7 +58,7 @@ set PYTHONPATH=path\to\varus\project && python path\to\app.py
 ```
 Linux:
 ```
-PYTHONPATH=path\to\varus\project python path\to\app.py
+PYTHONPATH=path/to/varus/project python path/to/app.py
 ```
 #### 👁️ Frontend
 1. Open `cmd`.
@@ -78,7 +78,7 @@ npm run build
 ```
 6. Start the application:
 ```
-serve -s path\to\frontend\folder\dist -l 5000
+serve -s path/to/frontend/folder/dist -l 5000
 ```
 ### Service creation
 To avoid starting the application manually after every server reboot, you can create services.
