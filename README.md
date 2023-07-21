@@ -7,6 +7,7 @@
 * [Deployment](#%EF%B8%8F-deployment)
   * [Backend](#%EF%B8%8F-backend)
   * [Frontend](#%EF%B8%8F-frontend)
+* [Service creation](#Service-creation)
 
 ### 📄 Current features
 1. Sites that the player supports:
@@ -78,4 +79,79 @@ npm run build
 6. Start the application:
 ```
 serve -s path\to\frontend\folder\dist -l 5000
+```
+### Service creation
+To avoid starting the application manually after every server reboot, you can create services.
+
+1. Open `cmd`.
+2. Go to the `system` folder:
+```
+cd /etc/systemd/system/
+```
+3. Create a backend service file:
+```
+nano varus.backend.service
+```
+4. Paste the service code and replace the paths in it:
+```
+[Unit]
+Description=Varus backend service
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/varus
+Environment="PATH=/root/varus/backend/venv/bin"
+Environment="PYTHONPATH=/root/varus"
+ExecStart=/root/varus/backend/venv/bin/python /root/varus/backend/src/app.py
+
+[Install]
+WantedBy=multi-user.target
+```
+5. Save all and close the file.
+6. Create a frontend service file:
+```
+nano varus.frontend.service
+```
+7. Paste the service code and replace the paths in it:
+```
+[Unit]
+Description=Varus frontend service
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/varus/frontend/dist
+ExecStart=/usr/bin/serve -s /root/varus/frontend/dist -l 80
+
+[Install]
+WantedBy=multi-user.target
+```
+8. Save all and close the file.
+9. Reload daemon:
+```
+systemctl daemon-reload
+```
+10. Enable services:
+```
+systemctl enable varus.backend.service
+```
+```
+systemctl enable varus.frontend.service
+```
+11. Start services:
+```
+systemctl start varus.backend.service
+```
+```
+systemctl start varus.frontend.service
+```
+12. Check if services are running:
+```
+systemctl status varus.backend.service
+```
+```
+systemctl status varus.frontend.service
 ```
