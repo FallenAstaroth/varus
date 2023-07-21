@@ -7,7 +7,7 @@
 * [Deployment](#%EF%B8%8F-deployment)
   * [Backend](#%EF%B8%8F-backend)
   * [Frontend](#%EF%B8%8F-frontend)
-* [Service creation](#Service-creation)
+* [Service creation](#-service-creation)
 
 ### 📄 Current features
 1. Sites that the player supports:
