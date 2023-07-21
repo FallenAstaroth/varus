@@ -29,7 +29,7 @@ pip install virtualenv
 ```
 3. Go to the `backend` folder:
 ```
-cd path\to\folder
+cd path/to/folder
 ```
 4. Create a virtual environment:
 ```
@@ -39,7 +39,7 @@ virtualenv venv
 
 Windows:
 ```
-call venv\Scripts\activate
+call venv/Scripts/activate
 ```
 Linux:
 ```
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 
 Windows:
 ```
-set PYTHONPATH=path\to\varus\project && python path\to\app.py
+set PYTHONPATH=path/to/varus/project && python path/to/app.py
 ```
 Linux:
 ```
@@ -64,7 +64,7 @@ PYTHONPATH=path/to/varus/project python path/to/app.py
 1. Open `cmd`.
 2. Go to the `frontend` folder:
 ```
-cd path\to\folder
+cd path/to/folder
 ```
 3. Install the modules:
 ```
