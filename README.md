@@ -80,7 +80,7 @@ npm run build
 ```
 serve -s path/to/frontend/folder/dist -l 5000
 ```
-### Service creation
+### 💻 Service creation
 To avoid starting the application manually after every server reboot, you can create services.
 
 1. Open `cmd`.
