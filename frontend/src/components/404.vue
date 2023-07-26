@@ -43,6 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     .image {
       width: 100%;
