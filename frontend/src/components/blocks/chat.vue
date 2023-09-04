@@ -116,9 +116,15 @@ export default {
 
   .chat-switcher-block {
     position: absolute;
+    opacity: 1;
     left: -25px;
     top: 50%;
     transform: translate(0, -50%);
+    transition: .3s ease-in-out;
+
+    &.btn-hidden {
+      opacity: 0;
+    }
 
     .btn.chat-switcher {
       width: 100%;

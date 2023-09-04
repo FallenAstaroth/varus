@@ -10,6 +10,7 @@
           @usernew="changeEpisodeEvent"
           @fullscreen="fullScreenEvent"
           @exitfullscreen="fullScreenExitEvent"
+          @ui="uiEvent($event)"
       >
       </div>
     </div>
@@ -61,17 +62,26 @@ export default {
       }
       socket.emit("server_seek", {time: time});
     },
-    skipOpening() {
-      socket.emit("server_skip_opening", {id: window.player.api("playlist_id")});
-    },
-    changeEpisodeEvent() {
-      socket.emit("server_change_episode", {id: window.player.api("playlist_id")});
-    },
     fullScreenEvent() {
       this.toggleChat("enter");
     },
     fullScreenExitEvent() {
       this.toggleChat("exit");
+    },
+    uiEvent(event) {
+      const chat = document.querySelector(".chat.block.overlay .chat-switcher-block");
+
+      if (event.info === 1) {
+        chat.classList.remove("btn-hidden");
+      } else {
+        chat.classList.add("btn-hidden");
+      }
+    },
+    changeEpisodeEvent() {
+      socket.emit("server_change_episode", {id: window.player.api("playlist_id")});
+    },
+    skipOpening() {
+      socket.emit("server_skip_opening", {id: window.player.api("playlist_id")});
     },
     toggleChat(event) {
       const chat = document.querySelector(".chat.block.overlay");
