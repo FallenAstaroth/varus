@@ -11,7 +11,7 @@
             @playerCreated="playerCreated"
         />
         <Chat :messages="messages"/>
-        <Chat :messages="messages" class="overlay"/>
+        <Chat :messages="messages" :chatSwitcher="true" class="overlay"/>
       </div>
     </div>
   </div>

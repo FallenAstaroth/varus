@@ -1,5 +1,10 @@
 <template>
   <div class="chat block">
+    <div v-if="chatSwitcher" class="chat-switcher-block">
+      <button type="button" class="btn btn-primary chat-switcher" @click="switchChat">
+        <img class="icon" src="@/assets/img/svg/right.svg" alt="">
+      </button>
+    </div>
     <div class="top">
       <h2 class="block-title">{{ $t("Room chat") }}</h2>
       <button class="btn btn-primary chat-clear" @click="clearChat">
@@ -62,6 +67,9 @@ export default {
     Message,
     Event
   },
+  props: {
+    chatSwitcher: Boolean
+  },
   inject: ["messages"],
   data() {
     return {
@@ -85,6 +93,15 @@ export default {
     clearChat() {
       socket.emit("chat_clear");
       this.messages.length = 0;
+    },
+    switchChat() {
+      const chat = document.querySelector(".chat.block");
+
+      if (chat.classList.contains("closed")) {
+        chat.classList.remove("closed");
+      } else {
+        chat.classList.add("closed");
+      }
     }
   }
 }
@@ -92,8 +109,31 @@ export default {
 
 <style lang="scss" scoped>
 .chat.block {
+  position: relative;
   max-width: 400px;
   height: 100%;
+  transition: .3s ease-in-out;
+
+  .chat-switcher-block {
+    position: absolute;
+    left: -25px;
+    top: 50%;
+    transform: translate(0, -50%);
+
+    .btn.chat-switcher {
+      width: 100%;
+      max-width: 25px;
+      border-radius: 100px 0 0 100px;
+      padding: .175rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: .3s ease-in-out;
+      }
+    }
+  }
 
   .top {
     display: flex;
@@ -202,6 +242,16 @@ export default {
 
   &.active {
     display: block;
+  }
+
+  &.closed {
+    right: -290px;
+
+    .chat-switcher {
+      img {
+        transform: rotate(180deg);
+      }
+    }
   }
 
   .form-control {

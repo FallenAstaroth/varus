@@ -68,17 +68,23 @@ export default {
       socket.emit("server_change_episode", {id: window.player.api("playlist_id")});
     },
     fullScreenEvent() {
-      const chat = document.querySelector(".chat.block.overlay");
-      const skip = document.querySelector("#skip-opening-overlay");
-      chat.classList.add("active");
-      skip.classList.remove("hidden");
-      this.$emit("chatChanged");
+      this.toggleChat("enter");
     },
     fullScreenExitEvent() {
+      this.toggleChat("exit");
+    },
+    toggleChat(event) {
       const chat = document.querySelector(".chat.block.overlay");
       const skip = document.querySelector("#skip-opening-overlay");
-      chat.classList.remove("active");
-      skip.classList.add("hidden");
+
+      if (event === "exit") {
+        chat.classList.remove("active");
+        skip.classList.add("hidden");
+      } else {
+        chat.classList.add("active");
+        skip.classList.remove("hidden");
+      }
+
       this.$emit("chatChanged");
     },
     getVideoTitle() {
@@ -90,7 +96,7 @@ export default {
       }
     },
     addOverlaySkip() {
-      const button = document.querySelector(".actions .btn.overlay");
+      const button = document.querySelector(".actions .btn.skip.overlay");
       const player = document.querySelector("#oframeplayer");
       player.appendChild(button);
     },
