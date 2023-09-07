@@ -44,6 +44,10 @@ export default {
     if (savedOption) {
       this.$emit("radioValueUpdated", savedOption);
       this.selectedOption = savedOption;
+    } else {
+      const selectedElement = this.items.find(item => item.checked === true);
+      this.$emit("radioValueUpdated", selectedElement.value);
+      this.selectedOption = selectedElement.value;
     }
   },
   watch: {

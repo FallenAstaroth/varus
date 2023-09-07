@@ -4,14 +4,6 @@
       <h3 class="form-title">{{ $t("Profile") }}</h3>
     </div>
     <div class="form-inputs">
-      <InputRadio
-          classes="languages"
-          name="language"
-          :items="languageItems"
-          :label='$t("Language")'
-          :storage="languageStorage"
-          @radioValueUpdated="updateLanguage"
-      />
       <InputTextColor
           text-id="name"
           text-name="name"
@@ -34,6 +26,14 @@
           :label='$t("Sex")'
           :storage="sexStorage"
           @radioValueUpdated="updateSex"
+      />
+      <InputRadio
+          classes="languages"
+          name="language"
+          :items="languageItems"
+          :label='$t("Language")'
+          :storage="languageStorage"
+          @radioValueUpdated="updateLanguage"
       />
       <button type="button" name="save" class="btn btn-primary btn-save" @click="saveProfile">
         {{ $t("Save") }}
