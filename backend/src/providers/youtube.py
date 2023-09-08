@@ -11,7 +11,7 @@ class Youtube:
         return dumps([
             {
                 "title": "Youtube",
-                "file": link
+                "file": link.split("?")[0]
             }
             for link in links]
         )
