@@ -10,10 +10,19 @@
             @chatChanged="scrollChatsBottom"
             @playerCreated="playerCreated"
         />
-        <Chat :messages="messages"/>
-        <Chat :messages="messages" :chatSwitcher="true" class="overlay"/>
+        <Chat
+            :messages="messages"
+            @chatCreated="chatCreated"
+        />
+        <Chat
+            :messages="messages"
+            :chatSwitcher="true"
+            @chatCreated="chatCreated"
+            class="overlay"
+        />
       </div>
     </div>
+    <Preloader v-if="!chatStatus || !playerStatus"/>
   </div>
 </template>
 
@@ -24,23 +33,39 @@ import {backendUrl} from "@/globals";
 import {colorStorage, nameStorage, sexStorage} from "@/storage";
 import Player from "@/components/blocks/player";
 import Chat from "@/components/blocks/chat";
+import Preloader from "@/components/blocks/preloader";
 
 export default {
   name: "PageRoomComponent",
   components: {
     Player,
-    Chat
+    Chat,
+    Preloader
   },
   data() {
     return {
       videos: null,
       skips: null,
       videosReady: false,
-      messages: []
+      messages: [],
+      chatStatus: false,
+      playerStatus: false
     }
   },
   mounted() {
     this.getVideos();
+  },
+  computed: {
+    blocksReady() {
+      return this.chatStatus && this.playerStatus;
+    }
+  },
+  watch: {
+    blocksReady(blocksStatus) {
+      if (blocksStatus) {
+        this.moveChat();
+      }
+    }
   },
   provide() {
     return {
@@ -91,9 +116,10 @@ export default {
       });
     },
     playerCreated() {
-      const chat = document.querySelector(".chat.block.overlay");
-      const player = document.querySelector("#oframeplayer");
-      player.appendChild(chat);
+      this.playerStatus = true;
+    },
+    chatCreated() {
+      this.chatStatus = true;
     },
     newMessage(data) {
       this.messages.push(data);
@@ -106,6 +132,11 @@ export default {
           chatBox.scrollTop = chatBox.scrollHeight;
         });
       });
+    },
+    moveChat() {
+      const chat = document.querySelector(".chat.block.overlay");
+      const player = document.querySelector("#oframeplayer");
+      player.appendChild(chat);
     }
   }
 }

@@ -81,6 +81,9 @@ export default {
       return socket;
     }
   },
+  mounted() {
+    this.$emit("chatCreated");
+  },
   methods: {
     sendMessage() {
       if (this.messageValue === "") return;
