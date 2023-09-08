@@ -73,7 +73,6 @@ body {
   .error-page {
     .error {
       .image {
-        width: 100%;
         max-width: 200px;
       }
 
