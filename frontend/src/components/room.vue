@@ -22,7 +22,7 @@
         />
       </div>
     </div>
-    <Preloader v-if="!chatStatus || !playerStatus"/>
+    <Preloader v-if="!allBlocksReady"/>
   </div>
 </template>
 
@@ -49,7 +49,8 @@ export default {
       videosReady: false,
       messages: [],
       chatStatus: false,
-      playerStatus: false
+      playerStatus: false,
+      allBlocksReady: false
     }
   },
   mounted() {
@@ -64,6 +65,9 @@ export default {
     blocksReady(blocksStatus) {
       if (blocksStatus) {
         this.moveChat();
+        setTimeout(() => {
+          this.allBlocksReady = true;
+        }, 1000);
       }
     }
   },
