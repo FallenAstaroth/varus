@@ -1,3 +1,3 @@
-from .dataclasses import Episode, Link
+from .dataclasses import Episode, Link, User
 
-__all__ = ["Episode", "Link"]
+__all__ = ["Episode", "Link", "User"]

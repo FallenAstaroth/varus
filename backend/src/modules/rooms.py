@@ -47,8 +47,7 @@ class RoomsManager:
             code: {
                 "count": 0,
                 "videos": videos,
-                "last_message_id": 1,
-                "languages": set()
+                "last_message_id": 1
             }
         })
 
