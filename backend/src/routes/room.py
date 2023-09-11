@@ -7,9 +7,13 @@ from backend.src.misc import youtube, anilibria, manager
 
 async def create(request: Request) -> Response:
     """
-    Creates the room.
-    :param request: Request
-    :return: dict
+    Creates a new room.
+
+    Parameters:
+    - request [Request]: Request object.
+
+    Returns:
+    - Response: A Response object.
     """
     form = await request.json()
 
@@ -20,14 +24,14 @@ async def create(request: Request) -> Response:
             "description": "Enter a link",
             "type": "link"
         })
+
         return Response(status=403, body=content, content_type="application/json")
 
     if "anilibria" in link:
         code = link.split('/')[-1].split('.')[0]
-        videos, skips = await anilibria.get_links(code)
+        videos, skips = await anilibria.get_data(code)
     else:
-        videos = await youtube.get_links([link])
-        skips = None
+        videos, skips = await youtube.get_data([link]), None
 
     room = await manager.create_room(videos)
 
@@ -49,9 +53,13 @@ async def create(request: Request) -> Response:
 
 async def get(request: Request) -> Response:
     """
-    Returns the room data.
-    :param request: Request
-    :return: dict
+    Returns information about the room or an error if it does not exist.
+
+    Parameters:
+    - request [Request]: Request object.
+
+    Returns:
+    - Response: A Response object.
     """
     form = await request.json()
 
@@ -63,6 +71,7 @@ async def get(request: Request) -> Response:
             "description": "Such a room does not exist",
             "type": "code"
         })
+
         return Response(status=403, body=content, content_type="application/json")
 
     room = await manager.get_room(code)

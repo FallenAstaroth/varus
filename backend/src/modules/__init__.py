@@ -1,4 +1,4 @@
-from .rooms_manager import RoomsManager
-from .translator import Translator
+from .rooms import RoomsManager
+from .labeler import Labeler
 
-__all__ = ["RoomsManager", "Translator"]
+__all__ = ["RoomsManager", "Labeler"]

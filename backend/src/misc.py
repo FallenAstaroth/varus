@@ -1,7 +1,7 @@
 from aiohttp import web
 from socketio import AsyncServer
 
-from backend.src.modules import RoomsManager, Translator
+from backend.src.modules import RoomsManager, Labeler
 from backend.src.providers import Youtube, Anilibria
 
 
@@ -15,4 +15,4 @@ socketio = AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
 youtube = Youtube()
 anilibria = Anilibria()
 manager = RoomsManager()
-translator = Translator()
+labeler = Labeler()

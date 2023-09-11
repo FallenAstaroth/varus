@@ -56,10 +56,10 @@ class RoomsManager:
 
     async def get_room(self, code: str) -> Union[dict, None]:
         """
-        Returns the room data by room code.
+        Returns the room data.
 
         Parameters:
-        - code [str]: Room code.
+        - code [str]: Room code for search.
 
         Returns:
         - dict: Room data.
@@ -68,10 +68,10 @@ class RoomsManager:
 
     async def check_room(self, code: str) -> bool:
         """
-        Checks if the room exists by its code.
+        Checks if the room exists.
 
         Parameters:
-        - code [str]: Room code.
+        - code [str]: Room code for search.
 
         Returns:
         - bool: True if it exists, False if it doesn't.

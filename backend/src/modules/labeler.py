@@ -1,7 +1,17 @@
-class Translator:
+class Labeler:
 
     @staticmethod
-    def get_event(label: str, sex: str):
+    def get_event(label: str, sex: str) -> str:
+        """
+        Returns the text of the event.
+
+        Parameters:
+        - label [str]: Label for search.
+        - sex [str]: The gender for which to find a label.
+
+        Returns:
+        - str: Event text.
+        """
         labels = {
             "join": {
                 "male": "joined the room (male)",
@@ -43,7 +53,16 @@ class Translator:
         return labels.get(label, {}).get(sex, "undefined")
 
     @staticmethod
-    def get_error(error: str):
+    def get_error(error: str) -> str:
+        """
+        Returns the text of the error.
+
+        Parameters:
+        - error [str]: Error label for search.
+
+        Returns:
+        - str: Error text.
+        """
         errors = {
             "name": "Enter a name",
             "code_not_specified": "Enter room code",

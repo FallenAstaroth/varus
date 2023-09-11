@@ -1,13 +1,23 @@
 from aiohttp.web import Response
 
 from json import dumps
+from typing import Union
 
-from backend.src.misc import socketio, manager, translator
+from backend.src.misc import socketio, manager, labeler
 
 
 @socketio.on("server_message")
-async def server_message(sid, data):
+async def server_message(sid: str, data: dict) -> None:
+    """
+    Receives a user's message and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -38,8 +48,17 @@ async def server_message(sid, data):
 
 
 @socketio.on("server_play")
-async def server_play(sid, data):
+async def server_play(sid: str, data: dict) -> None:
+    """
+    Receives the user's play event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -55,7 +74,7 @@ async def server_play(sid, data):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("play", sex),
+        "message": labeler.get_event("play", sex),
         "time": data.get("time"),
         "icon": "play",
         "type": "event"
@@ -65,8 +84,16 @@ async def server_play(sid, data):
 
 
 @socketio.on("server_pause")
-async def server_pause(sid):
+async def server_pause(sid: str) -> None:
+    """
+    Receives the user's pause event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -82,7 +109,7 @@ async def server_pause(sid):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("pause", sex),
+        "message": labeler.get_event("pause", sex),
         "icon": "pause",
         "type": "event"
     }
@@ -91,8 +118,17 @@ async def server_pause(sid):
 
 
 @socketio.on("server_seek")
-async def server_seek(sid, data):
+async def server_seek(sid: str, data: dict) -> None:
+    """
+    Receives the user's seek event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -108,7 +144,7 @@ async def server_seek(sid, data):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("seek", sex),
+        "message": labeler.get_event("seek", sex),
         "time": data.get("time"),
         "icon": "seek",
         "type": "event"
@@ -118,8 +154,17 @@ async def server_seek(sid, data):
 
 
 @socketio.on("server_skip_opening")
-async def server_skip_opening(sid, data):
+async def server_skip_opening(sid: str, data: dict) -> None:
+    """
+    Receives the user's opening skip event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -136,7 +181,7 @@ async def server_skip_opening(sid, data):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("skip", sex),
+        "message": labeler.get_event("skip", sex),
         "id": episode,
         "icon": "seek",
         "type": "event"
@@ -146,8 +191,17 @@ async def server_skip_opening(sid, data):
 
 
 @socketio.on("server_change_episode")
-async def server_change_episode(sid, data):
+async def server_change_episode(sid: str, data: dict) -> None:
+    """
+    Receives the user's episode change event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -164,7 +218,7 @@ async def server_change_episode(sid, data):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("switch", sex),
+        "message": labeler.get_event("switch", sex),
         "id": episode,
         "icon": "switch",
         "type": "event"
@@ -174,8 +228,17 @@ async def server_change_episode(sid, data):
 
 
 @socketio.on("server_join")
-async def server_join(sid, data):
+async def server_join(sid: str, data: dict) -> Union[Response, None]:
+    """
+    Receives the user's join event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - Response|None: Response object with error or None.
+    """
     room = data.get("room")
     name = data.get("name")
     color = data.get("color")
@@ -212,7 +275,7 @@ async def server_join(sid, data):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("join", sex),
+        "message": labeler.get_event("join", sex),
         "icon": "bell",
         "type": "event"
     }
@@ -221,8 +284,16 @@ async def server_join(sid, data):
 
 
 @socketio.on("disconnect")
-async def disconnect(sid):
+async def disconnect(sid: str) -> None:
+    """
+    Receives the user's disconnect event and sends it to all users in the room.
 
+    Parameters:
+    - sid [str]: Unique user id.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
@@ -241,7 +312,7 @@ async def disconnect(sid):
     content = {
         "name": name,
         "color": color,
-        "message": translator.get_event("left", sex),
+        "message": labeler.get_event("left", sex),
         "icon": "bell",
         "type": "event"
     }
@@ -257,8 +328,16 @@ async def disconnect(sid):
 
 
 @socketio.on("chat_clear")
-async def chat_clear(sid):
+async def chat_clear(sid: str) -> None:
+    """
+    Receives the user's chat clear event.
 
+    Parameters:
+    - sid [str]: Unique user id.
+
+    Returns:
+    - None.
+    """
     session = await socketio.get_session(sid)
 
     room = session.get("room")
