@@ -32,11 +32,6 @@
           />
         </template>
       </div>
-      <div class="actions">
-        <div class="actions-wrapper">
-          <span>{{ $t("Reply") }}</span>
-        </div>
-      </div>
     </div>
     <div class="chat-inputs">
       <input
@@ -70,7 +65,9 @@ export default {
   props: {
     chatSwitcher: Boolean
   },
-  inject: ["messages"],
+  inject: [
+      "messages"
+  ],
   data() {
     return {
       messageValue: ""
@@ -195,29 +192,6 @@ export default {
 
     &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(68, 69, 100, 1);
-    }
-
-    .actions {
-      display: none;
-      position: absolute;
-      color: #a5a5b7;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-
-      .actions-wrapper {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        max-width: 70%;
-        padding: 10px;
-        background-color: rgba(50, 50, 73, 1);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-      }
     }
   }
 
