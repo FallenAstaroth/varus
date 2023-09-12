@@ -2,7 +2,7 @@ from aiohttp.web import Request, Response
 
 from json import dumps
 
-from backend.src.types import Room
+from backend.src.types.dataclasses import Room
 from backend.src.misc import youtube, anilibria, manager
 
 

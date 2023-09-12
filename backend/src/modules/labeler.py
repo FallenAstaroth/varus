@@ -1,49 +1,52 @@
+from backend.src.types.enums import UserEvent
+
+
 class Labeler:
 
     @staticmethod
-    def get_event(label: str, sex: str) -> str:
+    def get_event(label: UserEvent, sex: str) -> str:
         """
         Returns the text of the event.
 
         Parameters:
-        - label [str]: Label for search.
+        - label [UserEvent]: Label for search.
         - sex [str]: The gender for which to find a label.
 
         Returns:
         - str: Event text.
         """
         labels = {
-            "join": {
+            UserEvent.CONNECT: {
                 "male": "joined the room (male)",
                 "female": "joined the room (female)",
                 "undefined": "joined the room (undefined)"
             },
-            "left": {
+            UserEvent.DISCONNECT: {
                 "male": "left the room (male)",
                 "female": "left the room (female)",
                 "undefined": "left the room (undefined)"
             },
-            "play": {
+            UserEvent.PLAY: {
                 "male": "started the player (male)",
                 "female": "started the player (female)",
                 "undefined": "started the player (undefined)"
             },
-            "pause": {
+            UserEvent.PAUSE: {
                 "male": "paused the player (male)",
                 "female": "paused the player (female)",
                 "undefined": "paused the player (undefined)"
             },
-            "seek": {
+            UserEvent.SEEK: {
                 "male": "rewound the player (male)",
                 "female": "rewound the player (female)",
                 "undefined": "rewound the player (undefined)"
             },
-            "skip": {
+            UserEvent.SKIP: {
                 "male": "skipped the opening (male)",
                 "female": "skipped the opening (female)",
                 "undefined": "skipped the opening (undefined)"
             },
-            "switch": {
+            UserEvent.SWITCH: {
                 "male": "switched the episode (male)",
                 "female": "switched the episode (female)",
                 "undefined": "switched the episode (undefined)"
