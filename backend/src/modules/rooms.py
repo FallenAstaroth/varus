@@ -81,3 +81,25 @@ class RoomsManager:
         """
         room = self.__rooms.get(code, None)
         return True if room else False
+
+    async def subtract_user(self, code: str) -> bool:
+        """
+        Subtracts 1 from the number of users and deletes the room if it is empty.
+
+        Parameters:
+        - code [str]: Room code for search.
+
+        Returns:
+        - bool: True if room exists, False if it doesn't.
+        """
+        room = self.__rooms.get(code)
+
+        if not room:
+            return False
+
+        room.users.count -= 1
+
+        if room.users.count <= 0:
+            del self.__rooms[code]
+
+        return True

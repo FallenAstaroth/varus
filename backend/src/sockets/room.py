@@ -1,14 +1,9 @@
-from aiohttp.web import Response
-
-from json import dumps
-from typing import Union
-
 from backend.src.types.dataclasses import User, Room
 from backend.src.misc import socketio, manager, labeler
-from backend.src.types.enums import UserEvent, ClientEvent, ServerEvent
+from backend.src.types.enums import UserEvent, ClientEvent, ServerEvent, EventIcon
 
 
-async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, icon: str, data: dict = None) -> None:
+async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, icon: EventIcon, data: dict = None) -> None:
     """
     Receives play, pause, seek, skip, switch user events and sends them to all users in the room.
 
@@ -32,7 +27,7 @@ async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, i
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(user_event, user.sex),
-        "icon": icon,
+        "icon": icon.value,
         "type": "event",
     }
 
@@ -57,7 +52,7 @@ async def server_play(sid: str, data: dict) -> None:
     Returns:
     - None.
     """
-    await send_event(sid, ClientEvent.PLAY, UserEvent.PLAY, "play", data)
+    await send_event(sid, ClientEvent.PLAY, UserEvent.PLAY, EventIcon.PLAY, data)
 
 
 @socketio.on(ServerEvent.PAUSE.value)
@@ -71,7 +66,7 @@ async def server_pause(sid: str) -> None:
     Returns:
     - None.
     """
-    await send_event(sid, ClientEvent.PAUSE, UserEvent.PAUSE, "pause")
+    await send_event(sid, ClientEvent.PAUSE, UserEvent.PAUSE, EventIcon.PAUSE)
 
 
 @socketio.on(ServerEvent.SEEK.value)
@@ -86,7 +81,7 @@ async def server_seek(sid: str, data: dict) -> None:
     Returns:
     - None.
     """
-    await send_event(sid, ClientEvent.SEEK, UserEvent.SEEK, "seek", data)
+    await send_event(sid, ClientEvent.SEEK, UserEvent.SEEK, EventIcon.SEEK, data)
 
 
 @socketio.on(ServerEvent.SKIP.value)
@@ -101,7 +96,7 @@ async def server_skip_opening(sid: str, data: dict) -> None:
     Returns:
     - None.
     """
-    await send_event(sid, ClientEvent.SKIP, UserEvent.SKIP, "seek", data)
+    await send_event(sid, ClientEvent.SKIP, UserEvent.SKIP, EventIcon.SEEK, data)
 
 
 @socketio.on(ServerEvent.SWITCH.value)
@@ -116,7 +111,7 @@ async def server_change_episode(sid: str, data: dict) -> None:
     Returns:
     - None.
     """
-    await send_event(sid, ClientEvent.SWITCH, UserEvent.SWITCH, "switch", data)
+    await send_event(sid, ClientEvent.SWITCH, UserEvent.SWITCH, EventIcon.SWITCH, data)
 
 
 @socketio.on(ServerEvent.MESSAGE.value)
@@ -158,7 +153,7 @@ async def server_message(sid: str, data: dict) -> None:
 
 
 @socketio.on(ServerEvent.CONNECT.value)
-async def server_join(sid: str, data: dict) -> Union[Response, None]:
+async def server_join(sid: str, data: dict) -> None:
     """
     Receives the user's join event and sends it to all users in the room.
 
@@ -172,16 +167,6 @@ async def server_join(sid: str, data: dict) -> Union[Response, None]:
     user: User = User(**data)
     room: Room = manager.rooms.get(user.room)
 
-    check = await manager.check_room(user.room)
-
-    if not check:
-        content = dumps({
-            "description": "Such a room does not exist",
-            "type": "code"
-        })
-
-        return Response(status=403, body=content, content_type="application/json")
-
     socketio.enter_room(sid, user.room)
     await socketio.save_session(sid, await user.dict())
 
@@ -193,7 +178,7 @@ async def server_join(sid: str, data: dict) -> Union[Response, None]:
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(UserEvent.CONNECT, user.sex),
-        "icon": "bell",
+        "icon": EventIcon.BELL.value,
         "type": "event"
     }
 
@@ -228,17 +213,14 @@ async def disconnect(sid: str) -> None:
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(UserEvent.DISCONNECT, user.sex),
-        "icon": "bell",
+        "icon": EventIcon.BELL.value,
         "type": "event"
     }
 
     await socketio.emit(ClientEvent.MESSAGE.value, content, room=user.room)
-    socketio.leave_room(sid, user.room)
+    await manager.subtract_user(user.room)
 
-    if user.room in manager.rooms:
-        room.users.count -= 1
-        if room.users.count <= 0:
-            del manager.rooms[user.room]
+    socketio.leave_room(sid, user.room)
 
 
 @socketio.on(ServerEvent.CLEAR.value)

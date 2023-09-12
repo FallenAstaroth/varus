@@ -1,3 +1,4 @@
-from .events import UserEvent, ClientEvent, ServerEvent
+from .event import UserEvent, ClientEvent, ServerEvent
+from .icon import EventIcon
 
-__all__ = ["UserEvent", "ClientEvent", "ServerEvent"]
+__all__ = ["UserEvent", "ClientEvent", "ServerEvent", "EventIcon"]
