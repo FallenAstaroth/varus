@@ -3,7 +3,7 @@ from aiohttp.web import Response
 from json import dumps
 from typing import Union
 
-from backend.src.helpers import User
+from backend.src.types import User, Room
 from backend.src.misc import socketio, manager, labeler
 
 
@@ -20,9 +20,9 @@ async def server_message(sid: str, data: dict) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    if room.get("last_message") == user.name and room["last_event"] == "message":
+    if room.messages.last.user == user.name and room.messages.last.event == "message":
         additional = True
     else:
         additional = False
@@ -33,19 +33,14 @@ async def server_message(sid: str, data: dict) -> None:
         "color": user.color,
         "message": data.get("message"),
         "additional": additional,
-        "messageId": room["last_message_id"],
+        "messageId": room.messages.last.id,
         "type": "message"
     }
 
-    count = room["count"]
-    last_message_id = room["last_message_id"]
-
-    room.update({
-        "last_message": user.name,
-        "last_event": "message",
-        "last_message_id": last_message_id + 1,
-        "count": count + 1
-    })
+    room.messages.last.id += 1
+    room.messages.last.user = user.name
+    room.messages.last.event = "message"
+    room.messages.count += 1
 
     await socketio.emit("client_message", content, room=user.room)
 
@@ -63,12 +58,10 @@ async def server_play(sid: str, data: dict) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "play",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "play"
 
     content = {
         "name": user.name,
@@ -94,12 +87,10 @@ async def server_pause(sid: str) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "pause",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "pause"
 
     content = {
         "name": user.name,
@@ -125,12 +116,10 @@ async def server_seek(sid: str, data: dict) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "seek",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "seek"
 
     content = {
         "name": user.name,
@@ -157,12 +146,10 @@ async def server_skip_opening(sid: str, data: dict) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "skip_opening",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "skip_opening"
 
     content = {
         "name": user.name,
@@ -189,12 +176,10 @@ async def server_change_episode(sid: str, data: dict) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "change_episode",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "change_episode"
 
     content = {
         "name": user.name,
@@ -220,10 +205,10 @@ async def server_join(sid: str, data: dict) -> Union[Response, None]:
     Returns:
     - Response|None: Response object with error or None.
     """
-    user = User(**data)
+    user: User = User(**data)
+    room: Room = manager.rooms.get(user.room)
 
     check = await manager.check_room(user.room)
-    room = manager.rooms[user.room]
 
     if not check:
         content = dumps({
@@ -234,15 +219,11 @@ async def server_join(sid: str, data: dict) -> Union[Response, None]:
         return Response(status=403, body=content, content_type="application/json")
 
     socketio.enter_room(sid, user.room)
-    await socketio.save_session(sid, user.dict())
+    await socketio.save_session(sid, await user.dict())
 
-    count = room["count"]
-
-    room.update({
-        "last_message": user.name,
-        "last_event": "connect",
-        "count": count + 1,
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "connect"
+    room.users.count += 1
 
     content = {
         "name": user.name,
@@ -271,15 +252,13 @@ async def disconnect(sid: str) -> None:
     except TypeError:
         return
 
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    if not manager.rooms.get(user.room):
+    if not room:
         return
 
-    room.update({
-        "last_message": user.name,
-        "last_event": "disconnect",
-    })
+    room.messages.last.user = user.name
+    room.messages.last.event = "disconnect"
 
     content = {
         "name": user.name,
@@ -293,8 +272,8 @@ async def disconnect(sid: str) -> None:
     socketio.leave_room(sid, user.room)
 
     if user.room in manager.rooms:
-        room["count"] -= 1
-        if room["count"] <= 0:
+        room.users.count -= 1
+        if room.users.count <= 0:
             del manager.rooms[user.room]
 
 
@@ -310,6 +289,6 @@ async def chat_clear(sid: str) -> None:
     - None.
     """
     user: User = User(**await socketio.get_session(sid))
-    room = manager.rooms[user.room]
+    room: Room = manager.rooms.get(user.room)
 
-    room.update({"last_event": "clear"})
+    room.messages.last.event = "clear"

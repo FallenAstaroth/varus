@@ -2,6 +2,8 @@ from typing import Union
 from random import choice
 from string import ascii_letters, digits
 
+from backend.src.types import Room, Users, Messages, Last
+
 
 class RoomsManager:
 
@@ -44,11 +46,12 @@ class RoomsManager:
         code = await self.__generate_room_code(10)
 
         self.__rooms.update({
-            code: {
-                "count": 0,
-                "videos": videos,
-                "last_message_id": 1
-            }
+            code: Room(
+                videos=videos,
+                skips={},
+                users=Users(count=0),
+                messages=Messages(Last(id=1, user="", event=""), count=0)
+            )
         })
 
         return code

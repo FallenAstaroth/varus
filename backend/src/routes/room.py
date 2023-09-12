@@ -2,6 +2,7 @@ from aiohttp.web import Request, Response
 
 from json import dumps
 
+from backend.src.types import Room
 from backend.src.misc import youtube, anilibria, manager
 
 
@@ -33,17 +34,17 @@ async def create(request: Request) -> Response:
     else:
         videos, skips = await youtube.get_data([link]), None
 
-    room = await manager.create_room(videos)
+    code = await manager.create_room(videos)
 
     content = {
-        "room": room,
+        "room": code,
         "videos": videos
     }
 
+    room: Room = manager.rooms[code]
+
     if skips:
-        manager.rooms[room].update({
-            "skips": skips
-        })
+        room.skips = skips
         content.update({
             "skips": skips
         })
@@ -74,11 +75,11 @@ async def get(request: Request) -> Response:
 
         return Response(status=403, body=content, content_type="application/json")
 
-    room = await manager.get_room(code)
+    room: Room = await manager.get_room(code)
 
     content = dumps({
-        "videos": room.get("videos"),
-        "skips": room.get("skips")
+        "videos": room.videos,
+        "skips": room.skips
     })
 
     return Response(status=200, body=content, content_type="application/json")
