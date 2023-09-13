@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional
 from dataclasses import dataclass
 
@@ -7,7 +6,7 @@ from dataclasses import dataclass
 class Last:
     id: int
     user: str
-    event: Enum
+    event: str
 
 
 @dataclass

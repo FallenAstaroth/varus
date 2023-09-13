@@ -27,7 +27,7 @@ async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, i
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(user_event, user.sex),
-        "icon": icon.value,
+        "icon": icon,
         "type": "event",
     }
 
@@ -37,10 +37,10 @@ async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, i
     elif user_event in [UserEvent.SKIP, UserEvent.SWITCH]:
         content["id"] = data.get("id")
 
-    await socketio.emit(emit_event.value, content, room=user.room)
+    await socketio.emit(emit_event, content, room=user.room)
 
 
-@socketio.on(ServerEvent.PLAY.value)
+@socketio.on(ServerEvent.PLAY)
 async def server_play(sid: str, data: dict) -> None:
     """
     Receives the user's play event and sends it to all users in the room.
@@ -55,7 +55,7 @@ async def server_play(sid: str, data: dict) -> None:
     await send_event(sid, ClientEvent.PLAY, UserEvent.PLAY, EventIcon.PLAY, data)
 
 
-@socketio.on(ServerEvent.PAUSE.value)
+@socketio.on(ServerEvent.PAUSE)
 async def server_pause(sid: str) -> None:
     """
     Receives the user's pause event and sends it to all users in the room.
@@ -69,7 +69,7 @@ async def server_pause(sid: str) -> None:
     await send_event(sid, ClientEvent.PAUSE, UserEvent.PAUSE, EventIcon.PAUSE)
 
 
-@socketio.on(ServerEvent.SEEK.value)
+@socketio.on(ServerEvent.SEEK)
 async def server_seek(sid: str, data: dict) -> None:
     """
     Receives the user's seek event and sends it to all users in the room.
@@ -84,7 +84,7 @@ async def server_seek(sid: str, data: dict) -> None:
     await send_event(sid, ClientEvent.SEEK, UserEvent.SEEK, EventIcon.SEEK, data)
 
 
-@socketio.on(ServerEvent.SKIP.value)
+@socketio.on(ServerEvent.SKIP)
 async def server_skip_opening(sid: str, data: dict) -> None:
     """
     Receives the user's opening skip event and sends it to all users in the room.
@@ -99,7 +99,7 @@ async def server_skip_opening(sid: str, data: dict) -> None:
     await send_event(sid, ClientEvent.SKIP, UserEvent.SKIP, EventIcon.SEEK, data)
 
 
-@socketio.on(ServerEvent.SWITCH.value)
+@socketio.on(ServerEvent.SWITCH)
 async def server_change_episode(sid: str, data: dict) -> None:
     """
     Receives the user's episode change event and sends it to all users in the room.
@@ -114,7 +114,7 @@ async def server_change_episode(sid: str, data: dict) -> None:
     await send_event(sid, ClientEvent.SWITCH, UserEvent.SWITCH, EventIcon.SWITCH, data)
 
 
-@socketio.on(ServerEvent.MESSAGE.value)
+@socketio.on(ServerEvent.MESSAGE)
 async def server_message(sid: str, data: dict) -> None:
     """
     Receives a user's message and sends it to all users in the room.
@@ -129,7 +129,7 @@ async def server_message(sid: str, data: dict) -> None:
     user: User = User(**await socketio.get_session(sid))
     room: Room = manager.rooms.get(user.room)
 
-    if room.messages.last.user == user.name and room.messages.last.event.value == "message":
+    if room.messages.last.user == user.name and room.messages.last.event == "message":
         additional = True
     else:
         additional = False
@@ -149,10 +149,10 @@ async def server_message(sid: str, data: dict) -> None:
     room.messages.last.event = UserEvent.MESSAGE
     room.messages.count += 1
 
-    await socketio.emit(ClientEvent.MESSAGE.value, content, room=user.room)
+    await socketio.emit(ClientEvent.MESSAGE, content, room=user.room)
 
 
-@socketio.on(ServerEvent.CONNECT.value)
+@socketio.on(ServerEvent.CONNECT)
 async def server_join(sid: str, data: dict) -> None:
     """
     Receives the user's join event and sends it to all users in the room.
@@ -178,14 +178,14 @@ async def server_join(sid: str, data: dict) -> None:
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(UserEvent.CONNECT, user.sex),
-        "icon": EventIcon.BELL.value,
+        "icon": EventIcon.BELL,
         "type": "event"
     }
 
-    await socketio.emit(ClientEvent.MESSAGE.value, content, room=user.room)
+    await socketio.emit(ClientEvent.MESSAGE, content, room=user.room)
 
 
-@socketio.on(ServerEvent.DISCONNECT.value)
+@socketio.on(ServerEvent.DISCONNECT)
 async def disconnect(sid: str) -> None:
     """
     Receives the user's disconnect event and sends it to all users in the room.
@@ -213,17 +213,17 @@ async def disconnect(sid: str) -> None:
         "name": user.name,
         "color": user.color,
         "message": labeler.get_event(UserEvent.DISCONNECT, user.sex),
-        "icon": EventIcon.BELL.value,
+        "icon": EventIcon.BELL,
         "type": "event"
     }
 
-    await socketio.emit(ClientEvent.MESSAGE.value, content, room=user.room)
+    await socketio.emit(ClientEvent.MESSAGE, content, room=user.room)
     await manager.subtract_user(user.room)
 
     socketio.leave_room(sid, user.room)
 
 
-@socketio.on(ServerEvent.CLEAR.value)
+@socketio.on(ServerEvent.CLEAR)
 async def chat_clear(sid: str) -> None:
     """
     Receives the user's chat clear event.

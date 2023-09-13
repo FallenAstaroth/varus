@@ -1,7 +1,4 @@
-from enum import Enum
-
-
-class EventIcon(Enum):
+class EventIcon:
     PLAY = "play"
     PAUSE = "pause"
     SEEK = "seek"

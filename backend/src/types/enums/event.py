@@ -1,7 +1,4 @@
-from enum import Enum
-
-
-class UserEvent(Enum):
+class UserEvent:
     PLAY = "play"
     PAUSE = "pause"
     SEEK = "seek"
@@ -14,7 +11,7 @@ class UserEvent(Enum):
     DEFAULT = "default"
 
 
-class ClientEvent(Enum):
+class ClientEvent:
     PLAY = "client_play"
     PAUSE = "client_pause"
     SEEK = "client_seek"
@@ -24,7 +21,7 @@ class ClientEvent(Enum):
     DEFAULT = "default"
 
 
-class ServerEvent(Enum):
+class ServerEvent:
     PLAY = "server_play"
     PAUSE = "server_pause"
     SEEK = "server_seek"
