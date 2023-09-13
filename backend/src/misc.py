@@ -11,7 +11,7 @@ APP_PORT = 5000
 ORIGIN = "http://localhost:8080/"
 
 app = web.Application()
-socketio = AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
+socketio = AsyncServer(async_mode="aiohttp", cors_allowed_origins="*", max_http_buffer_size=13 * 1024 * 1024)
 youtube = Youtube()
 anilibria = Anilibria()
 manager = RoomsManager()

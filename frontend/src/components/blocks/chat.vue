@@ -135,7 +135,7 @@ export default {
     },
     sendAttachment(event) {
       const file = event.target.files[0];
-      if (file) {
+      if (file && file.size / 1024 / 1024 <= 13) {
         socket.emit("server_attachment", {
           attachment: file
         });
