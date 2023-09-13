@@ -47,6 +47,20 @@
   background-color: #696cff;
   border-color: #696cff;
   box-shadow: 0 0.125rem 0.25rem 0 rgba(105, 108, 255, .4);
+
+  &:hover {
+    color: #fff !important;
+    background-color: #5f61e6 !important;
+    border-color: #5f61e6 !important;
+    transform: translateY(-3px) !important;
+    transition: .3s;
+  }
+}
+
+.btn-transparent {
+  color: #fff;
+  background-color: transparent;
+  padding: 0 3px !important;
 }
 
 .btn {
@@ -64,14 +78,6 @@
   padding: 0.4375rem 0.875rem;
   font-size: 0.9375rem;
   font-family: 'Montserrat', sans-serif;
-
-  &:hover {
-    color: #fff !important;
-    background-color: #5f61e6 !important;
-    border-color: #5f61e6 !important;
-    transform: translateY(-3px) !important;
-    transition: .3s;
-  }
 }
 
 @media screen and (max-width: 768px) {

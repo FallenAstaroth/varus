@@ -30,11 +30,22 @@
               :additional="message.additional"
               :your="message.user === socket.id"
           />
+          <Message
+              v-else-if="message.type === 'attachment'"
+              :color="message.color"
+              :name="message.name"
+              :attachment="message.attachment"
+              :messageId="message.messageId"
+              :additional="message.additional"
+              :your="message.user === socket.id"
+              @imageClicked="openImage"
+          />
         </template>
       </div>
     </div>
     <div class="chat-inputs">
-      <input
+      <div class="inputs">
+        <input
           type="text"
           class="form-control message-input"
           :placeholder='$t("Message")'
@@ -43,10 +54,27 @@
           v-model="messageValue"
           @keyup.enter="sendMessage"
           ref="message"
-      />
+        />
+        <input
+          type="file"
+          id="attach"
+          class="form-control attachment-input"
+          name="attach"
+          accept="image/png, image/jpeg"
+          @change="sendAttachment($event)"
+        />
+        <label for="attach" class="btn btn-transparent attachment-input">
+          <img class="icon" src="@/assets/img/svg/attach.svg" alt="">
+        </label>
+      </div>
       <button type="button" class="btn btn-primary message-send" name="send" @click="sendMessage">
         <img class="icon" src="@/assets/img/svg/send.svg" alt="">
       </button>
+    </div>
+    <div class="full-image" :class="fullImageHidden" @click="closeImage($event)">
+      <div class="image">
+        <img class="image-tag" :src="fullImageUrl" alt="">
+      </div>
     </div>
   </div>
 </template>
@@ -70,7 +98,9 @@ export default {
   ],
   data() {
     return {
-      messageValue: ""
+      messageValue: "",
+      fullImageHidden: "hidden",
+      fullImageUrl: ""
     }
   },
   computed: {
@@ -102,6 +132,21 @@ export default {
       } else {
         chat.classList.add("closed");
       }
+    },
+    sendAttachment(event) {
+      const file = event.target.files[0];
+      if (file) {
+        socket.emit("server_attachment", {
+          attachment: file
+        });
+      }
+    },
+    openImage(url) {
+      this.fullImageUrl = url;
+      this.fullImageHidden = "";
+    },
+    closeImage() {
+      this.fullImageHidden = "hidden";
     }
   }
 }
@@ -200,13 +245,60 @@ export default {
     justify-content: space-between;
     gap: 10px;
 
-    input {
+    .inputs {
       width: 100%;
+      position: relative;
+
+      input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .btn-transparent {
+        position: absolute;
+        top: 50%;
+        right: 7px;
+        transform: translate(0, -50%);
+      }
+    }
+
+    .form-control {
+      &.attachment-input {
+        display: none;
+      }
     }
 
     .icon {
       height: 23px;
       width: 23px;
+    }
+  }
+
+  .full-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .6);
+
+    &.hidden {
+      display: none;
+    }
+
+    .image {
+      width: 100%;
+      max-width: max-content;
+      height: 100%;
+      padding: 6% 20px;
+      margin: 0 auto;
+      box-sizing: border-box;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
   }
 }

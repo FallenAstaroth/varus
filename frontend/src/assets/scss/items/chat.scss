@@ -30,6 +30,14 @@
 
         &.additional {
           margin-top: 6px;
+
+          .header {
+            display: none;
+          }
+
+          .message {
+            padding-top: 0;
+          }
         }
 
         &.event {
@@ -77,12 +85,20 @@
           }
         }
 
-        &.additional .header {
-          display: none;
-        }
-
         .message {
           word-break: break-word;
+          padding-top: 3px;
+
+          .image {
+            width: 100%;
+            cursor: pointer;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+            }
+          }
         }
       }
     }

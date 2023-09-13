@@ -129,7 +129,7 @@ async def server_message(sid: str, data: dict) -> None:
     user: User = User(**await socketio.get_session(sid))
     room: Room = manager.rooms.get(user.room)
 
-    if room.messages.last.user == user.name and room.messages.last.event == "message":
+    if room.messages.last.user == user.name and room.messages.last.event in ["message", "attachment"]:
         additional = True
     else:
         additional = False
@@ -150,6 +150,44 @@ async def server_message(sid: str, data: dict) -> None:
     room.messages.count += 1
 
     await socketio.emit(ClientEvent.MESSAGE, content, room=user.room)
+
+
+@socketio.on(ServerEvent.ATTACHMENT)
+async def server_attachment(sid: str, data: dict) -> None:
+    """
+    Receives a user's attachment and sends it to all users in the room.
+
+    Parameters:
+    - sid [str]: Unique user id.
+    - data [dict]: User data.
+
+    Returns:
+    - None.
+    """
+    user: User = User(**await socketio.get_session(sid))
+    room: Room = manager.rooms.get(user.room)
+
+    if room.messages.last.user == user.name and room.messages.last.event in ["message", "attachment"]:
+        additional = True
+    else:
+        additional = False
+
+    content = {
+        "user": sid,
+        "name": user.name,
+        "color": user.color,
+        "attachment": data.get("attachment"),
+        "additional": additional,
+        "messageId": room.messages.last.id,
+        "type": "attachment"
+    }
+
+    room.messages.last.id += 1
+    room.messages.last.user = user.name
+    room.messages.last.event = UserEvent.ATTACHMENT
+    room.messages.count += 1
+
+    await socketio.emit(ClientEvent.ATTACHMENT, content, room=user.room)
 
 
 @socketio.on(ServerEvent.CONNECT)

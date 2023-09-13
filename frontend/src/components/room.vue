@@ -118,6 +118,9 @@ export default {
       socket.on("client_message", (data) => {
         this.newMessage(data);
       });
+      socket.on("client_attachment", (data) => {
+        this.newMessage(data);
+      });
     },
     playerCreated() {
       this.playerStatus = true;

@@ -5,6 +5,7 @@ class UserEvent:
     SKIP = "skip"
     SWITCH = "switch"
     MESSAGE = "message"
+    ATTACHMENT = "attachment"
     CLEAR = "clear"
     CONNECT = "connect"
     DISCONNECT = "disconnect"
@@ -18,6 +19,7 @@ class ClientEvent:
     SKIP = "client_skip_opening"
     SWITCH = "client_change_episode"
     MESSAGE = "client_message"
+    ATTACHMENT = "client_attachment"
     DEFAULT = "default"
 
 
@@ -28,6 +30,7 @@ class ServerEvent:
     SKIP = "server_skip_opening"
     SWITCH = "server_change_episode"
     MESSAGE = "server_message"
+    ATTACHMENT = "server_attachment"
     CLEAR = "chat_clear"
     CONNECT = "server_join"
     DISCONNECT = "disconnect"
