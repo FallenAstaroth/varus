@@ -3,7 +3,7 @@ from aiohttp import ClientSession
 from json import dumps
 from typing import List
 
-from backend.src.types.dataclasses import Episode, Link
+from utils.dataclasses import Episode, Link
 
 
 class Anilibria:

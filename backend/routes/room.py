@@ -2,10 +2,12 @@ from aiohttp.web import Request, Response
 
 from json import dumps
 
-from backend.src.types.dataclasses import Room
-from backend.src.misc import youtube, anilibria, manager
+from . import front as router
+from utils.dataclasses import Room
+from misc import youtube, anilibria, manager
 
 
+@router.post("/room/create", name="front.create")
 async def create(request: Request) -> Response:
     """
     Creates a new room.
@@ -52,6 +54,7 @@ async def create(request: Request) -> Response:
     return Response(status=200, body=dumps(content), content_type="application/json")
 
 
+@router.post("/room/get", name="front.get")
 async def get(request: Request) -> Response:
     """
     Returns information about the room or an error if it does not exist.

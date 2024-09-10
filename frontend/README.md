@@ -1,4 +1,4 @@
-# Varus
+# frontend
 
 ## Project setup
 ```
@@ -18,11 +18,6 @@ npm run build
 ### Lints and fixes files
 ```
 npm run lint
-```
-
-### Run production version
-```
-serve -s dist -l 5006
 ```
 
 ### Customize configuration

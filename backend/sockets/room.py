@@ -1,6 +1,6 @@
-from backend.src.types.dataclasses import User, Room
-from backend.src.misc import socketio, manager, labeler
-from backend.src.types.enums import UserEvent, ClientEvent, ServerEvent, EventIcon
+from utils.dataclasses import User, Room
+from misc import socketio, manager, labeler
+from utils.enums import UserEvent, ClientEvent, ServerEvent, EventIcon
 
 
 async def send_event(sid: str, emit_event: ClientEvent, user_event: UserEvent, icon: EventIcon, data: dict = None) -> None:

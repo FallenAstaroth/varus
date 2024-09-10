@@ -2,8 +2,8 @@ from typing import Union
 from random import choice
 from string import ascii_letters, digits
 
-from backend.src.types.enums import UserEvent
-from backend.src.types.dataclasses import Room, Users, Messages, Last
+from utils.enums import UserEvent
+from utils.dataclasses import Room, Users, Messages, Last
 
 
 class RoomsManager:

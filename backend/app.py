@@ -1,13 +1,11 @@
 from aiohttp.web import Application
 from aiohttp_cors import setup as setup_cors, ResourceOptions
 
-from backend.src.views import (
-    room as view_room
-)
-from backend.src.sockets import (
-    room as socket_room
-)
-from backend.src.misc import web, app, socketio, APP_HOST, APP_PORT
+from routes import front
+
+from sockets import room
+from misc import web, app, socketio
+from config import APP_HOST, APP_PORT
 
 
 def setup_app_sockets(app: Application) -> Application:
@@ -34,12 +32,7 @@ def setup_app_routes(app: Application) -> Application:
     Returns:
     - Application: Application object.
     """
-    views = [view_room]
-
-    for view in views:
-        view.setup(app)
-
-    return app
+    app.router.add_routes(front)
 
 
 def setup_app_cors(app: Application) -> Application:

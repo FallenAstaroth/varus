@@ -1,4 +1,4 @@
-from backend.src.types.enums import UserEvent
+from utils.enums import UserEvent
 
 
 class Labeler:
